@@ -10,5 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "moment": "^2.22.2"
+  },
+  "devDependencies": {
+    "jasmine-node": "^1.16.2"
   }
 }
