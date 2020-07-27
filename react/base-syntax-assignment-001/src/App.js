@@ -1,17 +1,31 @@
 import React, {Component} from 'react';
 import './App.css';
-import './UserInput/UserInput'
-import './UserOutput/UserOutput'
+import UserInput from './UserInput/UserInput'
+import UserOutput from'./UserOutput/UserOutput'
 
 class App extends Component{
+	state = {
+		users : [
+			{"username": "danny"}, 
+			{"username": "mose"}
+		]
+	}
+
+	switchNameHandler = (event) => {
+		this.setState({
+			users : [
+				{"username": "danny"}, 
+				{"username": event.target.value}
+			]
+		})
+	}
 
 	render(){
 		return (
-			<div className="UserInput">
-				<userinput/>
-			<div className="UserOuput">
-				<useroutput/>
-			</div>
+			<div className="App">
+				<UserInput changed={this.switchNameHandler}/>
+				<UserOutput username={this.state.users[0].username}/>
+				<UserOutput username={this.state.users[1].username}/>
 			</div>
 		);
 	}
