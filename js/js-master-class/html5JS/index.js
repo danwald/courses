@@ -11,7 +11,7 @@ window.onload = function()  {
 	});
 
 	setTimeout(() => {
-		buttons.forEach( button => {
+		  buttons.forEach( button => {
 			button.removeEventListener("click", clickHandler);
 		});
 	},3000);
