@@ -1,0 +1,66 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+  <style>
+		.box {
+			width: 200px;
+			height: 200px;
+			position: relative;
+			background-color: orangered;
+			padding-top: 55px;
+			box-sizing: border-box;
+			animation: anim;
+			animation-duration: 4s;
+			animation-delay: 2s;
+			animation-iteration-count: infinite;
+			animation-direction: alternate-reverse;
+			animation-timing-function: linear;
+			animation-timing-function: linear;
+		}
+
+		@keyframes anim {
+			0% {
+				left: 0;
+				top:0;
+				background-color: orangered;
+			}
+				
+			25% {
+				left: 500px;
+				top:0;
+				background-color: green;
+			}
+
+			50% {
+				left: 500px;
+				top: 500px;
+				background-color: goldenrod;
+			}
+			75% {
+				left: 0;
+				top: 500px;
+				background-color: royalblue;
+			}
+			100% {
+				left: 0;
+				top: 0;
+				background-color: orangered;
+			}
+		}
+
+	</style>
+
+    
+</head>
+    
+
+<body>
+	<div class="box"></div>
+</body>
+</html>
