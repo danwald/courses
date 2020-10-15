@@ -558,13 +558,12 @@ body {
 /* footer */
 .footer {
     margin-left: 8rem;
-
 }
 
 .main-part {
     display: flex;
     justify-content: space-between;
-    color: #1c1c1c;
+    background-color: #1c1c1c;
     padding: 4rem;
 }
 
@@ -629,7 +628,7 @@ body {
 
 .gallery-images {
     display: flex;
-    flexwrap: wrap;
+    flex-wrap: wrap;
 }
 
 .footer-image:hover {
@@ -639,7 +638,7 @@ body {
 
 .creator-part {
     display: flex;
-    justified-content: space-between;
+    justify-content: space-between;
     align-items: center;
     background-color: #111;
     padding: 0 4rem;
