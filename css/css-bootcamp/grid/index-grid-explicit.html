@@ -11,15 +11,16 @@
     <link rel="stylesheet" href="style.css?v=1.0" />
     <style>
       .container {
-        width: 600px;
+        width: 800px;
+        height: 600px;
         background-color: #efefef;
         margin: auto;
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(2, 100px);
-        grid-gap: 1row;
-        grid-auto-columns: 150px;
-        grid-auto-flow: column;
+        grid-template-columns: repeat(2, 150px);
+        grid-template-rows: repeat(4, 100px);
+        grid-gap: 1rem;
+        justify-content: center;
+        align-content: end;
       }
 
       .item {
