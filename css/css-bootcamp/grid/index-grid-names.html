@@ -16,8 +16,16 @@
         background-color: #ededed;
         margin: auto;
         display: grid;
-        grid-template-rows: [header-start] 1fr [header-end main-start sidebar-start] 1fr 1fr [main-end box-start] 1fr [box-end footer-start sidebar-end] 1fr [footer-end];
-        grid-template-columns: repeat(4, [col-start] 1fr [col-end]);
+        /*grid-template-rows: [header-start] 1fr [header-end main-start sidebar-start] 1fr 1fr [main-end box-start] 1fr [box-end footer-start sidebar-end] 1fr [footer-end];
+            grid-template-columns: repeat(4, [col-start] 1fr [col-end]); */
+        grid-template-rows: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-areas:
+          "header header header header"
+          "sidebar main main main"
+          "sidebar main main main"
+          "sidebar box-1 box-2 box-3"
+          "footer footer footer footer";
         grid-gap: 1rem;
       }
 
@@ -28,18 +36,40 @@
         padding: 1rem;
         color: #fff;
       }
+      /*
+          .header {
+            grid-area: header-start / col-start 1 / header-end / col-end -1;
+          }
+          .footer {
+            grid-area: footer-start / col-start 1 / footer-end / col-end -1;
+          }
+          .sidebar {
+            grid-area: sidebar-start / col-start 1 / sidebar-end/ col-end 1;
+          }
+          .main {
+            grid-area: main-start / col-start 2 / main-end / col-end -1;
+          }*/
 
       .header {
-        grid-area: header-start / col-start 1 / header-end / col-end -1;
-      }
-      .footer {
-        grid-area: footer-start / col-start 1 / footer-end / col-end -1;
+        grid-area: header;
       }
       .sidebar {
-        grid-area: sidebar-start / col-start 1 / sidebar-end/ col-end 1;
+        grid-area: sidebar;
+      }
+      .box-2 {
+        grid-area: box-2;
+      }
+      .box-3 {
+        grid-area: box-3;
+      }
+      .box-1 {
+        grid-area: box-1;
       }
       .main {
-        grid-area: main-start / col-start 2 / main-end / col-end -1;
+        grid-area: main;
+      }
+      .footer {
+        grid-area: footer;
       }
     </style>
   </head>
