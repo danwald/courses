@@ -16,8 +16,8 @@
         background-color: #ededed;
         margin: auto;
         display: grid;
-        grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-rows: [header-start] 1fr [header-end main-start sidebar-start] 1fr 1fr [main-end box-start] 1fr [box-end footer-start sidebar-end] 1fr [footer-end];
+        grid-template-columns: repeat(4, [col-start] 1fr [col-end]);
         grid-gap: 1rem;
       }
 
@@ -30,16 +30,16 @@
       }
 
       .header {
-        grid-area: 1 / 1 / -5 / 5;
+        grid-area: header-start / col-start 1 / header-end / col-end -1;
       }
       .footer {
-        grid-area: 5 / -5 / 6 / -1;
+        grid-area: footer-start / col-start 1 / footer-end / col-end -1;
       }
       .sidebar {
-        grid-area: 2 / 1 / 5 / 2;
+        grid-area: sidebar-start / col-start 1 / sidebar-end/ col-end 1;
       }
       .main {
-        grid-area: 2 / 2 / 4 / -1;
+        grid-area: main-start / col-start 2 / main-end / col-end -1;
       }
     </style>
   </head>
