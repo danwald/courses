@@ -181,7 +181,7 @@ body {
     visibility: hidden;
     opacity: 0;
     transition: all 1s;
-
+    z-index: 100;
 }
 
 .second-nav-item:first-child:hover .dropdown {
@@ -232,6 +232,7 @@ body {
     transform: translate(-50%, -50%);
     text-transform: uppercase;
     text-align: center;
+    z-index: 50;
 }
 
 .banner-heading {
@@ -316,4 +317,54 @@ body {
     80% { left: -100% }
 
     90% { left: 0 }
+}
+
+.slide-btn {
+    width: 1.3rem;
+    height: 1.3rem;
+    background-color: #bbb;
+    border: .2rem solid #d38800;
+    border-radius: 50%;
+    cursor: pointer;
+    outline: none;
+    position: absolute;
+    top: 95%;
+    transform: translateX(50%);
+    z-index: 10;
+}
+
+.slide-btn:focus {
+    background-color: #12376e;
+}
+
+.slide-btn-1 {
+    left:47%;
+}
+
+.slide-btn-2 {
+    left:49%;
+}
+.slide-btn-3 {
+   left:51%;
+}
+.slide-btn-4 {
+   left:53%;
+}
+
+.slide-btn-1:focus ~ .slideshow-wrapper {
+    animation: none;
+    left: 0;
+}
+
+.slide-btn-2:focus ~ .slideshow-wrapper {
+    animation: none;
+    left: -100%;
+}
+.slide-btn-3:focus ~ .slideshow-wrapper {
+    animation: none;
+    left: -200%;
+}
+.slide-btn-4:focus ~ .slideshow-wrapper {
+    animation: none;
+    left: -300%;
 }
