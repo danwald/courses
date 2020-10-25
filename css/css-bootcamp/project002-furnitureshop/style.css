@@ -222,7 +222,6 @@ body {
 .banner {
     grid-column: 2/10;
     grid-row: 4 /5 ;
-    background-color: #ccc;
     position: relative;
 }
 
@@ -276,6 +275,45 @@ body {
 .banner-btn:hover .banner-btn-text-two {
     top: 50%;
 }
+
 .slideshow {
-    display:none;
+    height: 100%;
+    overflow: hidden;
+}
+
+.slideshow-wrapper {
+    display: flex;
+    height: 100%;
+    width: 400%;
+    height: 100%;
+    position: relative;
+    animation: slideshow 10s infinite;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@keyframes slideshow {
+    0% { left:0 }
+    10% {left:0}
+
+    15% { left: -100% }
+    25% { left: -100% }
+
+    30% { left: -200% }
+    40% { left: -200% }
+
+    45% { left: -300% }
+    55% { left: -300% }
+
+    60% { left: -200% }
+    70% { left: -200% }
+
+    75% { left: -100% }
+    80% { left: -100% }
+
+    90% { left: 0 }
 }
