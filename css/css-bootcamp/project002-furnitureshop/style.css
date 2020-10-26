@@ -609,4 +609,14 @@ body {
 .contact-btn:hover {
     background-color: #12376e;
 }
+
+.footer {
+    grid-column: 2 / 10;
+    grid-row: 9 / 10;
+    font-size: 1.6rem;
+    text-align: center;
+    padding: 2rem 0 3rem -0;
+    color: #34598f;
+}
+
 /* furniture */
