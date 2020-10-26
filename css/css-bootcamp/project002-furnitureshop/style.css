@@ -20,7 +20,7 @@ body {
 .container {
     display: grid;
     grid-template-columns: minmax(6rem, 1fr) repeat(8, minmax(min-content, 16rem)) minmax(6rem, 1fr);
-    grid-template-rows: repeat(3, min-content) 70vh min-content;
+    grid-template-rows: repeat(3, min-content) 70vh repeat(5, min-content);
 
     grid-row-gap: 1.6rem;
     margin-top: 1.6rem;
@@ -426,5 +426,66 @@ body {
     width: 100%;
 }
 
-
 /* day offer */
+
+/* furniture */
+.bestselling-furniture {
+    grid-column: 2 / 10;
+    grid-row: 6 / 7;
+}
+
+.bestselling-furniture-header {
+    color: #23487f;
+    font-size: 4.5rem;
+    text-align: center;
+    margin: 3rem 0;
+}
+
+.bestselling-furniture-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+    grid-gap: 6.4rem;
+}
+
+.bestselling-furniture-card {
+    background-color: #efefef;
+    box-shadow: 0 1.5rem 6rem rgba(0, 0, 0, .3);
+}
+
+.bestselling-furniture-img {
+    width: 100%;
+    border-radius: .3rem .3rem 0 0;
+}
+
+.bestselling-furniture-heading {
+    margin: auto;
+    background-color: #ffdddd;
+    width: 80%;
+    text-align: center;
+    font-size: 2.4rem;
+    color: #458a9f;
+    padding: .5rem 0;
+    border-radius: .2rem;
+    transform: translateY(-50%);
+}
+
+.bestselling-furniture-paragraph {
+    font-size: 1.9rem;
+    color: #23487f;
+    text-align: center;
+    margin: 1.6rem;
+}
+.bestselling-furniture-btn {
+    width: 100%;
+    padding: 1.6rem;
+    background-color: #12376e;
+    font-size: 1.9rem;
+    color:  #fff;
+    border: none;
+    border-radius: 0 0 .3rem .3rem;
+}
+
+.bestselling-furniture-btn:hover {
+    background-color: #23487f;
+}
+/* furniture */
