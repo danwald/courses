@@ -1,0 +1,81 @@
+a:link {
+    font-size: 35px;
+    text-decoration: none;
+    color: green;
+}
+
+a:visited {
+    color: goldenrod;
+}
+
+a:hover {
+    color: grey;
+}
+
+a:active {
+    color: skyblue;
+}
+
+.dropdown-content a {
+    display: none;
+}
+
+.dropdown:hover .dropdown-content a {
+    display: block;
+}
+
+body {
+    margin: 0;
+}
+ul {
+    font-size: 40px;
+    list-style: none;
+}
+
+ul li:first-child {
+    color: red;
+}
+
+ul li:last-child {
+    color: green;
+}
+
+ul li:nth-child(3) {
+    color: blue;
+}
+h1, h2 {
+    margin: 0;
+}
+
+h1::first-letter {
+    font-size: 70px;
+    color: blue;
+    font-style: italic;
+}
+
+h1::before {
+    content: "This is";
+    color: green;
+}
+
+h1:after {
+    content: "weight";
+    color: red;
+    font-size: 50px;
+}
+
+section {
+    font-size: 48px;
+    background-color: orangered;
+    color: white;
+    width: 100vh;
+}
+
+h2 {
+    font-size: 200%;
+}
+
+section div {
+    background-color: green;
+    width: 33.333%;
+}
