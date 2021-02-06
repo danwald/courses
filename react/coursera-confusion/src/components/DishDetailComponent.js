@@ -25,8 +25,15 @@ class DishDetail extends Component {
 						<CardBody>
 							<CardTitle>{this.props.dish.name}</CardTitle>
 							<CardText>{this.props.dish.description}</CardText>
-						</CardBody>
+													</CardBody>
 					</Card>
+					<div className="col-12 col-md-5 m-1">
+								<ul class="list-inline">
+									<li class="list-inline-item">Lorem ipsum</li>
+									<li class="list-inline-item">Phasellus iaculis</li>
+									<li class="list-inline-item">Nulla volutpat</li>
+								</ul>
+					</div>
 				</div>
 			);
 		}
