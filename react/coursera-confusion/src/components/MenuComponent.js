@@ -5,13 +5,6 @@ class Menu extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {
-		}
-		console.log('Menu Component constructor');
-	}
-
-	componentDidMount() {
-		console.log('Menu Component componentDidMount');
 	}
 
   render() {
