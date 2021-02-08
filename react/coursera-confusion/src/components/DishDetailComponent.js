@@ -15,6 +15,10 @@ class DishDetail extends Component {
 		console.log('DishDetail Component componentDidMount');
 	}
 
+	componentDidUpdate() {
+		console.log('DishDetail Component componentDidUpdate');
+	}
+
 	render() {
 		console.log('DishDetail Component render');
 		if(this.props.dish != null){
