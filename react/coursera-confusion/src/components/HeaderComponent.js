@@ -1,13 +1,16 @@
 import React, {Component} from 'react';
-import { Navbar, NavbarBrand, Jumbotron } from 'reactstrap';
+import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
 
 class Header extends Component {
 	render(){
 		return(
 			<React.Fragment>
-				<Navbar dark>
+				<Navbar dark expand="md">
 					<div className="container">
-						<NavbarBrand href="/">Ristorant confusion</NavbarBrand>
+						<NavbarBrand className="mr-auto" href="/">
+							<img src="assets/images/logo.png" height="30" width="41" alt="Ristorante Con Fusion" />
+						</NavbarBrand>
 					</div>
 				</Navbar>
 				<Jumbotron>
