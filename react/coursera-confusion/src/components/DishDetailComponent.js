@@ -1,17 +1,24 @@
 import React from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle} from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 
-const DishDetail = ({dish}) => {
-	if(dish != null){
+const DishDetail = (props) => {
+	if(props.dish != null){
 		return(
 		  <div className="row">
+				<Breadcrumb>
+					<BreadcrumbItem><Link to='/home'>Home</Link></BreadcrumbItem>
+					<BreadcrumbItem><Link to='/menu'>Menu</Link></BreadcrumbItem>
+					<BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+				</Breadcrumb>
 				<Card>
-					<CardImg width="100%" src={dish.image} alt={dish.name} />
+					<CardImg width="100%" src={props.dish.image} alt={props.dish.name} />
 					<CardBody>
-						<CardTitle>{dish.name}</CardTitle>
-						<CardText>{dish.description}</CardText>
-												</CardBody>
+						<CardTitle>{props.dish.name}</CardTitle>
+						<CardText>{props.dish.description}</CardText>
+					</CardBody>
 				</Card>
 				<div className="col-12 col-md-5 m-1">
 							<ul class="list-inline">
