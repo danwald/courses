@@ -5,9 +5,17 @@ import { Link } from 'react-router-dom';
 function About(props) {
 
     const leaders = props.leaders.map((leader) => {
-        return (
-            <p>Leader {leader.name}</p>
-        );
+			return (
+				<Media>
+					<Media left href="#">
+							<Media object src={leader.image} alt={leader.abbr} />
+					</Media>
+					<Media body>
+							<Media heading> {leader.name} </Media>
+							 	{leader.description}
+					</Media>
+				</Media>
+				);
     });
 
     return(
