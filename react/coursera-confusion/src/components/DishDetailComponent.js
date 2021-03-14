@@ -4,6 +4,15 @@ import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 
+const RenderComment = (comment) => {
+	return(
+<blockquote class="blockquote">
+  <p class="mb-0">{comment.comment}</p>
+  <footer class="blockquote-footer">{comment.author} at <cite title="Source Title">{comment.date}</cite> Rating: {comment.rating}</footer>
+</blockquote>
+		);
+}
+
 const DishDetail = (props) => {
 	if(props.dish != null){
 		return(
@@ -21,11 +30,10 @@ const DishDetail = (props) => {
 					</CardBody>
 				</Card>
 				<div className="col-12 col-md-5 m-1">
-							<ul class="list-inline">
-								<li class="list-inline-item">Lorem ipsum</li>
-								<li class="list-inline-item">Phasellus iaculis</li>
-								<li class="list-inline-item">Nulla volutpat</li>
-							</ul>
+				{props.comments.filter(
+					comment => comment.dishId === props.dish.id)
+					.map(RenderComment)
+				}
 				</div>
 			</div>
 		);
