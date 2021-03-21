@@ -20,7 +20,7 @@ const DishDetail = (props) => {
 
 	const handleComment = (evt) => {
 		toggle();
-		props.addComment(props.dishId,modal.rating, modal.name.value, modal.comment.value, modal.rating.value)
+		props.addComment(props.dishId, modal.rating, modal.name.value, modal.comment.value)
 		evt.preventDefault();
 	}
 	if(props.dish != null){
