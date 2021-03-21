@@ -6,9 +6,8 @@ import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron, 
 				 Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
 
 
-const RenderComment = (comment) => {
-	return(
-<blockquote class="blockquote">
+const RenderComment = (comment, addComment, dishId) => {
+	return( <blockquote class="blockquote">
   <p class="mb-0">{comment.comment}</p>
   <footer class="blockquote-footer">{comment.author} at <cite title="Source Title">{comment.date}</cite> Rating: {comment.rating}</footer>
 </blockquote>
@@ -21,7 +20,7 @@ const DishDetail = (props) => {
 
 	const handleComment = (evt) => {
 		toggle();
-		alert('name:' + modal.name.value +' comment:' + modal.comment.value );
+		props.addComment(props.dishId,modal.rating, modal.name.value, modal.comment.value, modal.rating.value)
 		evt.preventDefault();
 	}
 	if(props.dish != null){
@@ -42,7 +41,7 @@ const DishDetail = (props) => {
 			<div className="col-12 col-md-5 m-1">
 			{props.comments.filter(
 				comment => comment.dishId === props.dish.id)
-				.map(RenderComment)
+				.map((comment) => RenderComment(comment, props.addComment, props.dish.id))
 			}
 			</div>
 			<Button color="blue" onClick={toggle}>Add comment</Button>
@@ -59,6 +58,16 @@ const DishDetail = (props) => {
 			<Label htmlForm="comment">comment</Label>
 			<Input type="text" id="comment" name="comment"
 				innerRef={(input) => modal.comment = input}/>
+ 			<Label for="exampleSelect">Select</Label>
+        <Input type="select" name="rating" id="rating"
+					innerRef={(input) => modal.rating = input}>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </Input>
+
 			</FormGroup>
 			<Button type="submit" value="submit" color="">Submit</Button>
 			</Form>
