@@ -4,6 +4,7 @@ import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron, Button,
 				 Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Loading } from './LoadingComponent';
 
 
 const RenderComment = (comment, addComment, dishId) => {
@@ -23,7 +24,26 @@ const DishDetail = (props) => {
 		props.addComment(props.dishId, modal.rating, modal.name.value, modal.comment.value)
 		evt.preventDefault();
 	}
-	if(props.dish != null){
+
+	if(props.isLoading) {
+		return(
+			<div className="container">
+				<div className="row">
+					<Loading />
+				</div>
+			</div>
+		);
+	}
+	else if (props.errMess) {
+		return(
+			<div className="container">
+				<div className="row">
+					<h4>{props.errMess}</h4>
+				</div>
+			</div>
+		);
+	}
+	else if(props.dish != null){
 		return(
 			<div className="row">
 			<Breadcrumb>
