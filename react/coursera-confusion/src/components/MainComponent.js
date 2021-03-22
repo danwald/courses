@@ -74,7 +74,9 @@ class Main extends Component {
 					<Redirect to="/home" />
 				</Switch>
 			  <DishDetail
-					dish={this.props.dishes.dishes.filter((dish) => dish.id === this.props.selectedDish )[0]} />
+					dish={this.props.dishes.dishes.filter((dish) => dish.id === this.props.selectedDish )[0]}
+					isLoading={this.props.dishes.isLoading}
+					errMess={this.props.dishes.errMess} />
 				<Footer />
 			</div>
 		);
