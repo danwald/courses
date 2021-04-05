@@ -6,12 +6,16 @@ import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron, 
 				 Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 const RenderComment = (comment, postComment, dishId) => {
-	return( <blockquote class="blockquote">
-  <p class="mb-0">{comment.comment}</p>
-  <footer class="blockquote-footer">{comment.author} at <cite title="Source Title">{comment.date}</cite> Rating: {comment.rating}</footer>
-</blockquote>
+	return(
+		<Fade in>
+			<blockquote class="blockquote">
+		<p class="mb-0">{comment.comment}</p>
+		<footer class="blockquote-footer">{comment.author} at <cite title="Source Title">{comment.date}</cite> Rating: {comment.rating}</footer>
+	</blockquote>
+		</Fade>
 		);
 }
 
@@ -51,18 +55,25 @@ const DishDetail = (props) => {
 			<BreadcrumbItem><Link to='/menu'>Menu</Link></BreadcrumbItem>
 			<BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
 			</Breadcrumb>
-			<Card>
-			<CardImg width="100%" src={baseUrl + props.dish.image} alt={props.dish.name} />
-			<CardBody>
-			<CardTitle>{props.dish.name}</CardTitle>
-			<CardText>{props.dish.description}</CardText>
-			</CardBody>
-			</Card>
+			<FadeTransform in
+				transformProps={{
+					exitTransform: 'scale(0.5) translateY(-50%)'
+			}}>
+				<Card>
+				<CardImg width="100%" src={baseUrl + props.dish.image} alt={props.dish.name} />
+				<CardBody>
+				<CardTitle>{props.dish.name}</CardTitle>
+				<CardText>{props.dish.description}</CardText>
+				</CardBody>
+				</Card>
+			</FadeTransform>
 			<div className="col-12 col-md-5 m-1">
+			<Stagger in>
 			{props.comments.filter(
 				comment => comment.dishId === props.dish.id)
 				.map((comment) => RenderComment(comment, props.postComment, props.dish.id))
 			}
+			</Stagger>
 			</div>
 			<Button color="blue" onClick={toggle}>Add comment</Button>
 			<Modal isOpen={modal.show} toggle={toggle}>
