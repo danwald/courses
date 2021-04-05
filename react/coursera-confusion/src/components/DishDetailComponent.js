@@ -7,7 +7,7 @@ import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron, 
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
 
-const RenderComment = (comment, addComment, dishId) => {
+const RenderComment = (comment, postComment, dishId) => {
 	return( <blockquote class="blockquote">
   <p class="mb-0">{comment.comment}</p>
   <footer class="blockquote-footer">{comment.author} at <cite title="Source Title">{comment.date}</cite> Rating: {comment.rating}</footer>
@@ -21,7 +21,7 @@ const DishDetail = (props) => {
 
 	const handleComment = (evt) => {
 		toggle();
-		props.addComment(props.dishId, modal.rating, modal.name.value, modal.comment.value)
+		props.postComment(props.dishId, modal.rating, modal.name.value, modal.comment.value)
 		evt.preventDefault();
 	}
 
@@ -61,7 +61,7 @@ const DishDetail = (props) => {
 			<div className="col-12 col-md-5 m-1">
 			{props.comments.filter(
 				comment => comment.dishId === props.dish.id)
-				.map((comment) => RenderComment(comment, props.addComment, props.dish.id))
+				.map((comment) => RenderComment(comment, props.postComment, props.dish.id))
 			}
 			</div>
 			<Button color="blue" onClick={toggle}>Add comment</Button>
