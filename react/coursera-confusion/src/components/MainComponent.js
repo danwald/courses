@@ -50,7 +50,7 @@ class Main extends Component {
 						dishesLoading={this.props.dishes.isLoading}
 						dishesErrMess={this.props.dishes.errMess}
 						leader={this.props.leaders.filter((dish) => dish.featured)[0]}
-					 	promotions={this.props.promotions.filter((dish) => dish.featured)[0]}
+					 	promotions={this.props.promotions.promotions.filter((dish) => dish.featured)[0]}
 						promosLoading={this.props.promotions.isLoading}
 						promosErrMess={this.props.promotions.errMess}
 					 />
@@ -64,7 +64,8 @@ class Main extends Component {
 					dish={this.props.dishes.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]}
 					isLoading={this.props.dishes.isLoading}
 					errMess={this.props.dishes.errMess}
-					comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
+					comments={this.props.comments.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
+					commentsErrMess={this.props.comments.errMess}
 					addComment={this.props.addComment}
 				/>
 			);

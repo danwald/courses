@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron, Button,
 				 Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
 import { Loading } from './LoadingComponent';
-
+import { baseUrl } from '../shared/baseUrl';
 
 const RenderComment = (comment, addComment, dishId) => {
 	return( <blockquote class="blockquote">
@@ -52,7 +52,7 @@ const DishDetail = (props) => {
 			<BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
 			</Breadcrumb>
 			<Card>
-			<CardImg width="100%" src={props.dish.image} alt={props.dish.name} />
+			<CardImg width="100%" src={baseUrl + props.dish.image} alt={props.dish.name} />
 			<CardBody>
 			<CardTitle>{props.dish.name}</CardTitle>
 			<CardText>{props.dish.description}</CardText>
