@@ -2,20 +2,26 @@ import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform } from 'react-animation-components';
 
 function About(props) {
 
     const leaders = props.leaders.leaders.map((leader) => {
 			return (
-				<Media>
-					<Media left href="#">
-							<Media object src={baseUrl + leader.image} alt={leader.abbr} />
-					</Media>
-					<Media body>
-							<Media heading> {leader.name} </Media>
-							 	{leader.description}
-					</Media>
-				</Media>
+				<FadeTransform in
+					transformProps={{
+						exitTransform: 'scale(0.5) translateY(-50%)'
+				}}>
+						<Media>
+							<Media left href="#">
+									<Media object src={baseUrl + leader.image} alt={leader.abbr} />
+							</Media>
+							<Media body>
+									<Media heading> {leader.name} </Media>
+										{leader.description}
+							</Media>
+						</Media>
+				</FadeTransform>
 				);
     });
 
@@ -38,21 +44,26 @@ function About(props) {
                     <p>The restaurant traces its humble beginnings to <em>The Frying Pan</em>, a successful chain started by our CEO, Mr. Peter Pan, that featured for the first time the world's best cuisines in a pan.</p>
                 </div>
                 <div className="col-12 col-md-5">
-                    <Card>
-                        <CardHeader className="bg-primary text-white">Facts At a Glance</CardHeader>
-                        <CardBody>
-                            <dl className="row p-1">
-                                <dt className="col-6">Started</dt>
-                                <dd className="col-6">3 Feb. 2013</dd>
-                                <dt className="col-6">Major Stake Holder</dt>
-                                <dd className="col-6">HK Fine Foods Inc.</dd>
-                                <dt className="col-6">Last Year's Turnover</dt>
-                                <dd className="col-6">$1,250,375</dd>
-                                <dt className="col-6">Employees</dt>
-                                <dd className="col-6">40</dd>
-                            </dl>
-                        </CardBody>
-                    </Card>
+										<FadeTransform in
+											transformProps={{
+												exitTransform: 'scale(0.5) translateY(-50%)'
+										}}>
+											<Card>
+													<CardHeader className="bg-primary text-white">Facts At a Glance</CardHeader>
+													<CardBody>
+															<dl className="row p-1">
+																	<dt className="col-6">Started</dt>
+																	<dd className="col-6">3 Feb. 2013</dd>
+																	<dt className="col-6">Major Stake Holder</dt>
+																	<dd className="col-6">HK Fine Foods Inc.</dd>
+																	<dt className="col-6">Last Year's Turnover</dt>
+																	<dd className="col-6">$1,250,375</dd>
+																	<dt className="col-6">Employees</dt>
+																	<dd className="col-6">40</dd>
+															</dl>
+													</CardBody>
+											</Card>
+										</FadeTransform>
                 </div>
                 <div className="col-12">
                     <Card>
