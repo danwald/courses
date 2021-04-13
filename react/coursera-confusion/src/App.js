@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import { Navbar, NavbarBrand } from 'reactstrap';
 import Main from './components/MainComponent'
 import './App.css';
 import {BrowserRouter } from 'react-router-dom';
