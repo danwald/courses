@@ -2,7 +2,8 @@ import React, {Component}  from 'react';
 import { Breadcrumb, BreadcrumbItem, Button, Label, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Control, Form, Errors, actions } from 'react-redux-form';
-
+import { postFeedback } from '../redux/ActionCreators';
+import { connect } from 'react-redux';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <=len);
@@ -10,18 +11,20 @@ const minLength = (len) => (val) => (val) && (val.length >=len);
 const isNumber = (val) => !isNaN(Number(val));
 const validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9a-z.-]+\.[A-Za-z]{2,4}$/i.test(val);
 
+const mapDispatchtorProps = (dispatch) => ({
+	postFeedback: (firstname, lastname, telnum, agree, contactType, message) => dispatch(postFeedback(firstname, lastname, telnum, agree, contactType, message)),
+});
 
 class Contact extends Component {
 
 	constructor(props) {
 		super(props);
-
-		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	handleSubmit(values){
-		console.log("Current state is: " + JSON.stringify(values));
-		alert("Current state is: " + JSON.stringify(values));
+	handleSubmit = (evt) => {
+		alert("Current state is: " + JSON.stringify(evt));
+		this.props.postFeedback(evt.firstname, evt.lastname,evt.telnum, evt.agree,
+														evt.contactType, evt.message);
 		this.props.resetFeedbackForm();
 	}
 
@@ -63,7 +66,7 @@ class Contact extends Component {
 								<h3>Feedback can has</h3>
 							</div>
 							<div className="col-12 col-md-9">
-								<Form model="feedback" onSubmit={(values) => this.handleSubmit(values)}>
+								<Form model="feedback" onSubmit={this.handleSubmit}>
 									<Row className="form-group">
 										<Label htmlfor="firstname" md={2}>First Name</Label>
 										<Col md={10}>
@@ -186,4 +189,4 @@ class Contact extends Component {
 	}
 }
 
-export default Contact;
+export default connect(mapDispatchtorProps)(Contact);
