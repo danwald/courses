@@ -189,3 +189,50 @@ export const addLeaders = (leaders) => ({
 	type: ActionTypes.ADD_LEADERS,
 	payload: leaders
 });
+
+export const addFeedback = (feedback) => ({
+	type: ActionTypes.ADD_FEEDBACK,
+	payload: feedback
+});
+
+export const postFeedback = (firstname, lastname, telnum, agree,
+															contactType, message) => (dispatch) => {
+	const newFeedback = {
+		firstname: firstname,
+		lastname: lastname,
+		telnum: telnum,
+		agree: agree,
+		contactType: contactType,
+		message: message
+	}
+	newFeedback.date = new Date().toISOString();
+
+	return fetch(baseUrl + 'feedback', {
+		method: 'POST',
+		body: JSON.stringyfy(newFeedback),
+		headers: {
+			'Content-Type': 'application.json'
+		},
+		credentials: 'same-origin'
+		})
+	  .then(response => {
+			if (response.ok) {
+				return response;
+			}
+			else {
+				var error = new Error('Error' + response.status + ':' + response.statusText);
+				error.response = response
+				throw error;
+			}
+		},
+		error => {
+			var errmess = new Error(error.message);
+			throw errmess;
+		})
+		.then(response => response.json())
+		.then(response => dispatch(addFeedback(response)))
+	  .catch(error => {
+			console.log('Post feedback error', (error.message));
+		  alert('post feedback failed' + error.message);
+		});
+}
