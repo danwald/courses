@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+const getCoords = (move, sideLength = 3) => {
+	return { x: ~(move/sideLength), y: move % sideLength}
+}
 const getStatusLine = (winner, xNext) => {
 	if (winner) {
 		return 'Winner: ' + winner;
@@ -61,6 +64,7 @@ class Game extends React.Component {
 		this.state  = {
 			history: [{
 				squares: Array(9).fill(null),
+				move: null
 			}],
 			xNext: true,
 			step: 0
@@ -78,6 +82,7 @@ class Game extends React.Component {
 		this.setState({
 			history: history.concat([{
 				squares: squares,
+				move: i
 			}]),
 			xNext: !this.state.xNext,
 			step: history.length
