@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 const getCoords = (move, sideLength = 3) => {
-	return { x: ~(move/sideLength), y: move % sideLength}
+	return { col: Math.floor(move+1/sideLength), row: move+1 % sideLength}
 }
 const getStatusLine = (winner, xNext) => {
 	if (winner) {
@@ -102,8 +102,9 @@ class Game extends React.Component {
 		const winner = calculateWinner(current.squares);
 		const status = getStatusLine(winner, this.state.xNext);
 		const moves = history.map((step, move) => {
+			const coord = getCoords(current.move);
 			const desc = move ?
-				'Go to move #' + move:
+				'Go to move #' + move + ' ' + `(${coord.row}, ${coord.col})`:
 				'Go to game start';
 			return (
 				<li key={move}>
