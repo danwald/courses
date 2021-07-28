@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 const getCoords = (move, sideLength = 3) => {
-	return { col: Math.floor(move+1/sideLength), row: move+1 % sideLength}
+	return { row: Math.floor(move/sideLength)+1, col: (move % sideLength) + 1}
 }
 const getStatusLine = (winner, xNext) => {
 	if (winner) {
