@@ -102,7 +102,7 @@ class Game extends React.Component {
 		const winner = calculateWinner(current.squares);
 		const status = getStatusLine(winner, this.state.xNext);
 		const moves = history.map((step, move) => {
-			const coord = getCoords(current.move);
+			const coord = getCoords(history[move].move);
 			const desc = move ?
 				'Go to move #' + move + ' ' + `(${coord.row}, ${coord.col})`:
 				'Go to game start';
