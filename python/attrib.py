@@ -7,19 +7,21 @@ logger = logging.getLogger(__name__)
 
 @dataclasses.dataclass
 class DictAttrib:
-    name:  str  # attribute
-    data:  dict = dataclasses.field(default_factory=dict)  # user defined attributes
+    # class attribute
+    name:  str
+    # runtime user defined attributes  
+    data:  dict = dataclasses.field(default_factory=dict)
 
     def __str__(self):
         return f'{self.name}| {self.data}'
 
     def __getattr__(self, name):
-        """called when attribute not found see __getattribute__"""
+        """called when attribute not found after __getattribute__"""
         try:
             # check if in dict
             return self.data[name]
         except KeyError:
-            # to avoid nested exception
+            # to avoid nested exception error
             pass
         raise AttributeError(name)
 
@@ -38,4 +40,4 @@ if __name__ == '__main__':
         logger.info(f'{bar.bar}')
         logger.info(f'{bar.a}')
     except AttributeError:
-        logger.exception('failed')
+        logger.exception('failure')
