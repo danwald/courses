@@ -1,0 +1,9 @@
+[project]
+name = "dispatch"
+version = "1.0.0"
+dependencies = [
+    'importlib-metadata; python_version<"3.10"',
+]
+
+[tool.setuptools.packages]
+find = {}
