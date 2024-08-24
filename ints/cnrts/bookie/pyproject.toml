@@ -1,12 +1,17 @@
 [project]
-name = "bookie"
-version = "0.0.1"
+name = 'bookie'
+version = '0.0.1'
 dependencies = [
     'importlib-metadata; python_version<"3.10"',
     'requests',
 ]
 [projects.scripts]
-cli = "bookie:main"
+cli = 'bookie:main'
+
+[project.optional-dependencies]
+test = [
+    'pytest',
+]
 
 [tool.setuptools.packages]
 find = {}
