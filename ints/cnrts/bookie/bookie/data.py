@@ -21,16 +21,13 @@ class OrderBook:
     def __iadd__(self, other):
         self.asks.extend(other.asks)
         self.bids.extend(other.bids)
-        self.asks = sorted(self.asks, key=lambda x: x.price)
-        self.bids = sorted(self.bids, key=lambda x: x.price, reverse=True)
+        self.asks = sorted(self.asks, key=lambda x: x.price, reverse=True)
+        self.bids = sorted(self.bids, key=lambda x: x.price)
         self.index = 0
         return self
 
     def __add__(self, other):
-        self.asks = sorted(self.asks.extend(other.asks), key=lambda x: x.price)
-        self.bids = sorted(self.bids.extend(other.bids), key=lambda x: x.price, reverse=True)
-        self.index = 0
-        return self
+        return self.__iadd__(other)
 
     def __iter__(self):
         return self
