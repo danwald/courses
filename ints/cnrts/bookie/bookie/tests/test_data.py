@@ -27,11 +27,11 @@ def test_OrderBook():
     b2 = Bid(2.0, 3.0, datetime.now())
     ob2 = OrderBook([a2], [b2])
     ob += ob2
-    assert ob.asks == [a, a2]
-    assert ob.bids == [b2, b]
+    assert ob.asks == [a2, a]
+    assert ob.bids == [b, b2]
     assert ob.index == 0
 
-    assert next(ob) == (a, b2)
     assert next(ob) == (a2, b)
+    assert next(ob) == (a, b2)
     with pytest.raises(StopIteration):
         next(ob)
