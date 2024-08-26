@@ -1,11 +1,13 @@
+import argparse
+
 from bookie import *
 from decimal import Decimal
 
 
-def no_match(*args, **kwargs):
-    amount = 5
-    include_kraken = True
-    bids, asks, bid_cost, ask_cost = Decimal(amount), Decimal(amount), Decimal(0), Decimal(0)
+def no_match(amount, include_kraken):
+    bids, asks, bid_cost, ask_cost = (
+        Decimal(amount), Decimal(amount), Decimal(0), Decimal(0)
+    )
     books = get_books(include_kraken)
     while bids > 0 and asks > 0:
         for ask, bid in books:
@@ -42,4 +44,8 @@ def get_books(include_kraken):
 
 
 if __name__ == '__main__':
-    no_match()
+    parser = argparse.ArgumentParser(description='Find bids,asks cost USD, for a given amount of BTC')
+    parser.add_argument('--amount', help='amount of btc [5.0]',  type=float, default=5.0)
+    parser.add_argument('--kraken', help='include kraken exchange [False]',  action='store_true')
+    args = parser.parse_args()
+    no_match(args.amount, args.kraken)
