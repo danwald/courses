@@ -2,11 +2,13 @@ import pytest
 from bookie.data import *
 from datetime import datetime
 
+
 def test_Ask():
     a = Ask(1.0, 2.0, datetime.now())
     assert a.price == 1.0
     assert a.quantity == 2.0
     assert isinstance(a.time, datetime)
+
 
 def test_Bid():
     b = Bid(1.0, 2.0, datetime.now())
