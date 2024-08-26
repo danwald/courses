@@ -1,16 +1,18 @@
 [project]
-name = 'bookie'
-version = '0.0.1'
+name = "bookie"
+version = "0.0.1"
 dependencies = [
     'importlib-metadata; python_version<"3.10"',
-    'requests',
+    "requests",
+    "PyJWT==2.8.0",
+    "cryptography==42.0.5",
 ]
 [projects.scripts]
-cli = 'bookie:main'
+cli = "bookie:main"
 
 [project.optional-dependencies]
 test = [
-    'pytest',
+    "pytest",
 ]
 
 [tool.setuptools.packages]
