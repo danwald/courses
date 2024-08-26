@@ -1,14 +1,15 @@
-from urllib.parse import urljoin
-from decimal import Decimal
-from .data import Ask, Bid
-import jwt
-from cryptography.hazmat.primitives import serialization
-import time
 import secrets
-from cb import COIN_BASE_CRED
-
-import requests
+import time
 from datetime import datetime
+from decimal import Decimal
+from urllib.parse import urljoin
+
+import jwt
+import requests
+from cb import COIN_BASE_CRED
+from cryptography.hazmat.primitives import serialization
+
+from .data import Ask, Bid
 
 
 class Gemini:

@@ -1,6 +1,8 @@
-import pytest
-from bookie.data import *
 from datetime import datetime
+
+import pytest
+
+from bookie.data import *
 
 
 def test_Ask():

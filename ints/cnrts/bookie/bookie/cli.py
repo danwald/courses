@@ -1,7 +1,7 @@
 import argparse
+from decimal import Decimal
 
 from bookie import *
-from decimal import Decimal
 
 
 def most(amount, include_kraken):
