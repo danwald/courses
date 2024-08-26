@@ -8,7 +8,7 @@ def no_match(*args, **kwargs):
     bids, asks, bid_cost, ask_cost = Decimal(amount), Decimal(amount), Decimal(0), Decimal(0)
     books = get_books(include_kraken)
     while bids > 0 and asks > 0:
-        for bid, ask in books:
+        for ask, bid in books:
             print (f"bid: {bid.price} {bid.quantity} ask: {ask.price} {ask.quantity}")
             if bids > 0:
                 bids -= bid.quantity

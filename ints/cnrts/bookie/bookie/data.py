@@ -21,8 +21,8 @@ class OrderBook:
     def __iadd__(self, other):
         self.asks.extend(other.asks)
         self.bids.extend(other.bids)
-        self.asks = sorted(self.asks, key=lambda x: x.price, reverse=True)
-        self.bids = sorted(self.bids, key=lambda x: x.price)
+        self.asks = sorted(self.asks, key=lambda x: x.price)
+        self.bids = sorted(self.bids, key=lambda x: x.price, reverse=True)
         self.index = 0
         return self
 
