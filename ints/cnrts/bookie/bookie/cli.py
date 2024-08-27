@@ -60,7 +60,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--no-match",
-        help="method:no_match - doesnt match, returns max bids/asks in  USD for `amount` of btc; method:match - matches available bids/asks to returns valid trades w.r.t available price. Might be less than `amount`",
+        help="method:no_match - doesnt match, returns max bids/asks in  USD for `amount` of btc; method:match - matches available bids/asks to returns valid trades w.r.t available price. Might be less than `amount` as not enough bids or asks available. [match]",
         dest="method",
         action="store_const",
         const=no_match,
