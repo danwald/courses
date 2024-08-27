@@ -9,8 +9,19 @@ logger = logging.getLogger()
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
 def most(amount, include_kraken):
-    pass
+    bids, asks, bid_cost, ask_cost = (
+        Decimal(amount),
+        Decimal(amount),
+        Decimal(0),
+        Decimal(0),
+    )
+    books = get_books(include_kraken)
 
+    for bid in books.bids:
+        if bids > 0:
+            for ask in books.asks:
+                if ask.price > bid.price:
+                    break
 
 def no_match(amount, include_kraken):
     bids, asks, bid_cost, ask_cost = (
