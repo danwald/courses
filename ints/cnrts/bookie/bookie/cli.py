@@ -1,8 +1,12 @@
 import argparse
+import logging
+import sys
 from decimal import *
 
 from bookie import *
 
+logger = logging.getLogger()
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
 def most(amount, include_kraken):
     pass
@@ -27,15 +31,15 @@ def no_match(amount, include_kraken):
     books = get_books(include_kraken)
     while bids > 0 and asks > 0:
         for ask, bid in books:
-            print(f"bid: {bid.price} {bid.quantity} ask: {ask.price} {ask.quantity}")
+            logger.debug(f"bid: {bid.price} {bid.quantity} ask: {ask.price} {ask.quantity}")
             bids, bid_cost = transact(bids, bid_cost, bid.quantity, bid.price)
             asks, ask_cost = transact(asks, ask_cost, ask.quantity, ask.price)
         if bids or asks:
-            print("Resetting and  getting more books to finish the trade .")
+            logger.warning("Resetting and getting more books to finish the trade ...")
             books += get_books(include_kraken)
             bids, asks = Decimal(amount), Decimal(amount)
 
-    print(f"Cost of no-match asks:{ask_cost:.2f}$, bids:{bid_cost:.2f}$ for {amount}:BTC")
+    logger.info(f"Cost of no-match asks:{ask_cost:.2f}$, bids:{bid_cost:.2f}$ for {amount}:BTC")
 
 
 def get_books(include_kraken):
