@@ -1,5 +1,5 @@
 import argparse
-from decimal import Decimal
+from decimal import *
 
 from bookie import *
 
@@ -15,29 +15,27 @@ def no_match(amount, include_kraken):
         Decimal(0),
         Decimal(0),
     )
+    def transact(acc, cost_acc, quant, price):
+        if acc > 0:
+            acc -= quant
+            cost_acc += price * quant
+            if acc < 0: # gone over the amount
+                cost_acc += price * acc
+                acc = 0
+        return acc, cost_acc
+
     books = get_books(include_kraken)
     while bids > 0 and asks > 0:
         for ask, bid in books:
             print(f"bid: {bid.price} {bid.quantity} ask: {ask.price} {ask.quantity}")
-            if bids > 0:
-                bids -= bid.quantity
-                bid_cost += bid.price * bid.quantity
-                if bids < 0:
-                    bid_cost += bid.price * bids
-                    bids = 0
-            if asks > 0:
-                asks -= ask.quantity
-                ask_cost += ask.price * ask.quantity
-                if asks < 0:
-                    ask_cost += ask.price * asks
-                    asks = 0
+            bids, bid_cost = transact(bids, bid_cost, bid.quantity, bid.price)
+            asks, ask_cost = transact(asks, ask_cost, ask.quantity, ask.price)
         if bids or asks:
-            print("getting more books to finish the trade")
+            print("Resetting and  getting more books to finish the trade .")
             books += get_books(include_kraken)
             bids, asks = Decimal(amount), Decimal(amount)
 
-    print(f"Total cost of bids: {bid_cost}")
-    print(f"Total cost of asks: {ask_cost}")
+    print(f"Cost of no-match asks:{ask_cost:.2f}$, bids:{bid_cost:.2f}$ for {amount}:BTC")
 
 
 def get_books(include_kraken):
