@@ -68,5 +68,9 @@ if __name__ == "__main__":
         const=no_match,
         default=most,
     )
+    parser.add_argument(
+        "--verbose", help="increase output verbosity", action="store_true"
+    )
     args = parser.parse_args()
+    logger.setLevel(logging.DEBUG)
     args.method(args.amount, args.kraken)
