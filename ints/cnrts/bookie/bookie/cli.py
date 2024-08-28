@@ -15,13 +15,7 @@ def most(amount, include_kraken):
         Decimal(0),
         Decimal(0),
     )
-    books = get_books(include_kraken)
-
-    for bid in books.bids:
-        if bids > 0:
-            for ask in books.asks:
-                if ask.price > bid.price:
-                    break
+    print('Not implemented yet')
 
 def no_match(amount, include_kraken):
     bids, asks, bid_cost, ask_cost = (
@@ -72,12 +66,12 @@ if __name__ == "__main__":
         "--kraken", help="include kraken exchange [False]", action="store_true"
     )
     parser.add_argument(
-        "--no-match",
-        help="method:no_match - doesnt match, returns max bids/asks in  USD for `amount` of btc; method:match - matches available bids/asks to returns valid trades w.r.t available price. Might be less than `amount` as not enough bids or asks available. [match]",
+        "--match",
+        help="method:no_match - doesnt match, returns max bids/asks in  USD for `amount` of btc; method:match - matches available bids/asks to returns valid trades w.r.t available price. Might be less than `amount` as not enough bids or asks available. [no_match]",
         dest="method",
         action="store_const",
-        const=no_match,
-        default=most,
+        const=most,
+        default=no_match,
     )
     parser.add_argument(
         "--verbose", help="increase output verbosity", action="store_true"
