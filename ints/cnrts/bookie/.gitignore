@@ -1,0 +1,4 @@
+bookie/cb.py
+.venv
+bookie.egg-info
+build
