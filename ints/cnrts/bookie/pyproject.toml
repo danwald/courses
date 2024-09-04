@@ -5,7 +5,7 @@ dependencies = [
     'importlib-metadata; python_version<"3.10"',
     "requests",
     "PyJWT==2.8.0",
-    "cryptography==42.0.5",
+    "cryptography==43.0.1",
 ]
 [projects.scripts]
 cli = "bookie:main"
