@@ -1,4 +1,5 @@
 use std::fmt::{Display, Formatter, Result};
+use std::mem;
 
 #[derive(Debug)]
 struct Matrix(f32, f32, f32,f32);
@@ -22,9 +23,18 @@ fn main() {
     let _float = 3.14f64;
     let _bool = false;
     let _tup = (1, 2, 4);
-    let mut _ar: [i32; 5] = [1, 2, 3, 4, 5];
     let m = Matrix(1.1, 1.2, 2.1, 2.2);
     println!("{:?}", m);
     println!("Matrix:\n{}", m);
     println!("Transpose Matrix:\n{}", transpose(m));
+
+    let ar: [i32; 5] = [1, 2, 3, 4, 5];
+    println!("{:?} size({}) len({})", ar, mem::size_of_val(&ar), ar.len());
+
+    for i in 0..ar.len() + 1 {
+        match ar.get(i) {
+            Some(val) => println!("ar[{}] = {}", i, val),
+            None => println!("ar[{}] = None", i),
+        }
+    }
 }
