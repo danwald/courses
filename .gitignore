@@ -49,3 +49,6 @@ docker-compose.yaml
 .codacy.yaml
 .python-version
 package-lock.json
+Cargo.lock
+Cargo.toml
+**/target/*
