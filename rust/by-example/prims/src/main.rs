@@ -24,6 +24,7 @@ fn main() {
     let _bool = false;
     let _tup = (1, 2, 4);
     let m = Matrix(1.1, 1.2, 2.1, 2.2);
+    let mut m2: i32 = 2;
     println!("{:?}", m);
     println!("Matrix:\n{}", m);
     println!("Transpose Matrix:\n{}", transpose(m));
@@ -37,4 +38,7 @@ fn main() {
             None => println!("ar[{}] = None", i),
         }
     }
+    println!("m2={}", m2);
+    m2 += 2;
+    println!("m2={}", m2);
 }
