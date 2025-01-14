@@ -9,4 +9,11 @@ fn main() {
         format!("{thu8:b}"),
 
     );
+
+    let x = 1u8;
+    let y = 1i32;
+    let z = 1f64;
+    println!("{} size is {} bytes and type", x, std::mem::size_of_val(&x));
+    println!("{} size is {} bytes and type", y, std::mem::size_of_val(&y));
+    println!("{} size is {} bytes and type", z, std::mem::size_of_val(&z));
 }
