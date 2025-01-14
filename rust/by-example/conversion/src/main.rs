@@ -1,4 +1,5 @@
 use std::convert::From;
+use std::convert::Into;
 use std::fmt;
 
 struct Number {
@@ -19,5 +20,7 @@ impl From<i32> for Number {
 
 fn main() {
     let num = Number::from(42);
-    println!("num:{}", num);
+    let i = 5i32;
+    let n2: Number = i.into();
+    println!("num:{} n2:{}", num, n2);
 }
