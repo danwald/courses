@@ -23,4 +23,8 @@ fn main() {
     vec.push(em);
     vec.push(em2);
     println!("{:?}", vec);
+
+    type NanoSecond = u64;
+    let nano: NanoSecond = 5 as u64;
+    println!("nano: {}", nano);
 }
