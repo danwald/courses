@@ -16,4 +16,11 @@ fn main() {
     println!("{} size is {} bytes and type", x, std::mem::size_of_val(&x));
     println!("{} size is {} bytes and type", y, std::mem::size_of_val(&y));
     println!("{} size is {} bytes and type", z, std::mem::size_of_val(&z));
+
+    let em = 5u8;
+    let em2 = 5u8;
+    let mut vec = Vec::new();
+    vec.push(em);
+    vec.push(em2);
+    println!("{:?}", vec);
 }
