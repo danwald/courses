@@ -11,9 +11,27 @@ def iterative_chop(target, array):
             return i
     return -1
 
+def recursive_chop(target, array):
+    def _chop(target, start, end, array):
+        if start >= end:
+            return -1
+        mid = (start + end) // 2
+        if target == array[mid]:
+            return mid
+        if start == mid:
+            return -1
+        if array[mid] < target:
+            return _chop(target, mid, end, array)
+        else:
+            return _chop(target, start, mid, array)
+    return _chop(target, 0, len(array), array)
+
 
 if __name__ == '__main__':
-    for meth in (iterative_chop,):
+    for meth in (
+        iterative_chop,
+        recursive_chop,
+    ):
         print('Testing', meth.__name__)
         assert -1 ==  meth(3, [])
         assert -1 ==  meth(3, [1])
