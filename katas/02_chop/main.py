@@ -6,11 +6,15 @@ It should return the integer index of the target in the array, or -1 if the targ
 
 
 def iterative_chop(target, array):
-    return 0
+    for i, val in enumerate(array):
+        if val == target:
+            return i
+    return -1
 
 
 if __name__ == '__main__':
     for meth in (iterative_chop,):
+        print('Testing', meth.__name__)
         assert -1 ==  meth(3, [])
         assert -1 ==  meth(3, [1])
         assert 0 ==  meth(1, [1])
