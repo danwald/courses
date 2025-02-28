@@ -4,6 +4,7 @@ Write a binary chop method that takes an integer search target and a sorted arra
 It should return the integer index of the target in the array, or -1 if the target is not in the array.
 '''
 
+import random
 
 def iterative_chop(target, array):
     for i, val in enumerate(array):
@@ -26,11 +27,33 @@ def recursive_chop(target, array):
             return _chop(target, start, mid, array)
     return _chop(target, 0, len(array), array)
 
+def bs_chop(target, array):
+    #print(f'Looking for {target} in {array}')
+    if not array:
+        return -1
+
+    pivot = len(array) // 2
+    max_it = len(array) >> 1
+    while 0 <= pivot < len(array) and max_it >= 0:
+        val = array[pivot]
+        #print(f'\tarray[{pivot}] = {val} {max_it}')
+        if val == target:
+            return pivot
+        if pivot == 0 or pivot == len(array) - 1:
+            return -1
+        if val > target:
+            pivot = pivot // 2
+        else:
+            pivot += ((len(array) - pivot) // 2)
+        max_it -= 1
+    return -1
+
 
 if __name__ == '__main__':
     for meth in (
         iterative_chop,
         recursive_chop,
+        bs_chop,
     ):
         print('Testing', meth.__name__)
         assert -1 ==  meth(3, [])
