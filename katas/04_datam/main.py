@@ -6,22 +6,41 @@ In weather.dat you’ll find daily weather data for Morristown, NJ for June 2002
 Part Two: Soccer League Table
 The file football.dat contains the results from the English Premier League for 2001/2. The columns labeled ‘F’ and ‘A’ contain the total number of goals scored for and against each team in that season (so Arsenal scored 79 goals against opponents, and had 36 goals scored against them). Write a program to print the name of the team with the smallest difference in ‘for’ and ‘against’ goals.
 '''
+import re
+
+class ReaderContent:
+    def __init__(self, file, data_filter, *cols):
+        self.fp = open(file)
+        self.filt = data_filter
+        self.cols = cols
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        while line:=next(self.fp, '\n'):
+            if re.match(self.filt, line):
+                break
+        if not line:
+            raise StopIteration()
+
+        line = line.split()
+        data = []
+        for col in self.cols:
+            data.append(line[col])
+        return data
 
 
 def weather(infile='weather.dat'):
     min_spread, mday = 1 << 10, -1
-    with open(infile) as fp:
-        _ = fp.readline()
-        for ln in fp:
-            try:
-                day, mx, mi = map(lambda x: int(x),  ln.split()[:3])
-            except:
-                pass
-            else:
-                sp = mx - mi
-                if sp < min_spread:
-                    min_spread, mday = sp, day
-        return mday
+    #import pdb;pdb.set_trace();
+    rc = ReaderContent(infile, r'^\d+ ', 1, 2, 3)
+    for dc in rc:
+        day, mx, mi = map(lambda x: int(x),  dc)
+        sp = mx - mi
+        if sp < min_spread:
+            min_spread, mday = sp, day
+    return mday
 
 
 def soccer(infile='football.dat'):
