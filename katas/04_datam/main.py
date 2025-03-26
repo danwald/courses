@@ -18,11 +18,12 @@ class ColumnReader:
         return self
 
     def __next__(self):
-        while line:=next(self.fp, '\n'):
+        while True:
+            line = self.fp.readline()
+            if not line:
+                raise StopIteration()
             if re.match(self.filt, line):
                 break
-        if not line:
-            raise StopIteration()
 
         line = line.split()
         data = []
@@ -35,10 +36,14 @@ def weather(infile='weather.dat'):
     min_spread, mday = 1 << 10, -1
     rc = ColumnReader(infile, r'^ +\d+ ', 0, 1, 2)
     for dc in rc:
-        day, mx, mi = map(lambda x: int(x),  dc)
-        sp = mx - mi
-        if sp < min_spread:
-            min_spread, mday = sp, day
+        try:
+            day, mx, mi = map(lambda x: int(x),  dc)
+        except:
+            continue
+        else:
+            sp = mx - mi
+            if sp < min_spread:
+                min_spread, mday = sp, day
     return mday
 
 
