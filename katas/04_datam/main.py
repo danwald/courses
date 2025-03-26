@@ -60,7 +60,6 @@ def soccer(infile='football.dat'):
             else:
                 sp = abs(gf - ga)
                 if sp < min_spread:
-                    print(team, sp, gf, ga)
                     min_spread, wteam = sp, team
         return wteam
 
