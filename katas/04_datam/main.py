@@ -49,19 +49,17 @@ def weather(infile='weather.dat'):
 
 def soccer(infile='football.dat'):
     min_spread, wteam = 1 << 10, None
-    with open(infile) as fp:
-        _ = fp.readline()
-        for ln in fp:
-            try:
-                data = ln.split()
-                team,gf,ga = data[1], int(data[-4]), int(data[-2])
-            except:
-                pass
-            else:
-                sp = abs(gf - ga)
-                if sp < min_spread:
-                    min_spread, wteam = sp, team
-        return wteam
+    rc = ColumnReader(infile, r'^ +\d\d?\.', 1, -4, -2)
+    for ln in rc:
+        try:
+            team,gf,ga = ln[0], int(ln[1]), int(ln[2])
+        except:
+            continue
+        else:
+            sp = abs(gf - ga)
+            if sp < min_spread:
+                min_spread, wteam = sp, team
+    return wteam
 
 
 
