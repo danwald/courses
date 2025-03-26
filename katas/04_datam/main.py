@@ -8,7 +8,7 @@ The file football.dat contains the results from the English Premier League for 2
 '''
 import re
 
-class ReaderContent:
+class ColumnReader:
     def __init__(self, file, data_filter, *cols):
         self.fp = open(file)
         self.filt = data_filter
@@ -33,8 +33,7 @@ class ReaderContent:
 
 def weather(infile='weather.dat'):
     min_spread, mday = 1 << 10, -1
-    #import pdb;pdb.set_trace();
-    rc = ReaderContent(infile, r'^\d+ ', 1, 2, 3)
+    rc = ColumnReader(infile, r'^ +\d+ ', 0, 1, 2)
     for dc in rc:
         day, mx, mi = map(lambda x: int(x),  dc)
         sp = mx - mi
