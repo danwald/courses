@@ -9,10 +9,10 @@ The file football.dat contains the results from the English Premier League for 2
 import re
 
 class ColumnReader:
-    def __init__(self, file, data_filter, *cols):
+    def __init__(self, file, data_filter, cols_conv):
         self.fp = open(file)
         self.filt = data_filter
-        self.cols = cols
+        self.cols_conv = cols_conv
 
     def __iter__(self):
         return self
@@ -27,20 +27,20 @@ class ColumnReader:
 
         line = line.split()
         data = []
-        for col in self.cols:
-            data.append(line[col])
-        return data
+        for col,meth in self.cols_conv.items():
+            try:
+                data.append(meth(line[col]))
+            except:
+                break
+        return data if len(data) == len(self.cols_conv) else None
 
 
 def weather(infile='weather.dat'):
     min_spread, mday = 1 << 10, -1
-    rc = ColumnReader(infile, r'^ +\d+ ', 0, 1, 2)
+    rc = ColumnReader(infile, r'^ +\d+ ', {0:int, 1:int, 2:int})
     for dc in rc:
-        try:
-            day, mx, mi = map(lambda x: int(x),  dc)
-        except:
-            continue
-        else:
+        if dc:
+            day, mx, mi = dc
             sp = mx - mi
             if sp < min_spread:
                 min_spread, mday = sp, day
@@ -49,13 +49,10 @@ def weather(infile='weather.dat'):
 
 def soccer(infile='football.dat'):
     min_spread, wteam = 1 << 10, None
-    rc = ColumnReader(infile, r'^ +\d\d?\.', 1, -4, -2)
+    rc = ColumnReader(infile, r'^ +\d\d?\.', {1:str, -4:int, -2:int})
     for ln in rc:
-        try:
-            team,gf,ga = ln[0], int(ln[1]), int(ln[2])
-        except:
-            continue
-        else:
+        if ln:
+            team,gf,ga = ln
             sp = abs(gf - ga)
             if sp < min_spread:
                 min_spread, wteam = sp, team
