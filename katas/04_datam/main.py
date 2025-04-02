@@ -34,12 +34,12 @@ class ColumnReader:
                 break
         return data if len(data) == len(self.cols_conv) else None
 
-    def get_min(self, meth=lambda x:x):
+    def get_min(self, g_x=lambda x,y: x-y, f_g_x=lambda x:x):
         min_k, min_val =  None, float('inf')
         for dc in self:
             if dc:
                 key, a, b = dc
-                res = meth(a-b)
+                res = f_g_x(g_x(a,b))
                 if res < min_val:
                     min_k, min_val, = key, res
         return min_k
@@ -54,8 +54,7 @@ def weather(infile='weather.dat'):
 
 def soccer(infile='football.dat'):
     rc = ColumnReader(infile, r'^ +\d\d?\.', {1:str, -4:int, -2:int})
-    return rc.get_min(meth=abs)
-
+    return rc.get_min(f_g_x=abs)
 
 
 if __name__ == '__main__':
