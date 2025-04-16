@@ -1,8 +1,9 @@
 from enum import Enum
 from decimal import Decimal
+from typing import Annotated
 
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException, Query
+from pydantic import BaseModel, AfterValidator
 
 
 class ModelClass(str, Enum):
@@ -43,14 +44,14 @@ async def models(model_name: ModelClass):
         case ModelClass.bar:
             return {"message": f"barie {model_name.value}"}
 
-@app.get("/items/{item_id}")
+@app.get("/fake_items/{item_id}")
 async def items(item_id: str):
     try:
         return {"message": fake_items_db['db'][item_id]}
     except KeyError:
         raise HTTPException(status_code=404, detail=f"Item not found for key {item_id}")
 
-@app.get("/items/")
+@app.get("/fake_items/")
 async def get_item(skip: int=0, limit: int=10):
     return fake_items_db['items'][skip:skip+limit]
 
@@ -62,3 +63,29 @@ async def  create_item(item: Item, item_id: int, q: str|None = None):
     if q:
         result['q'] = q
     return result
+
+def startswithVowel(data: str) -> None:
+    if not data:
+        raise ValueError('empty data')
+
+    if data.lower()[0] not in 'aeiou':
+        raise ValueError('Doesnt start with a vowel')
+
+@app.get("/query/")
+async def get_querys(
+    q : Annotated [
+        str|None,
+        Query(
+            min_length=2,
+            max_length=5,
+            title="QParams",
+            description="query parameter for fun",
+            deprecated=True,
+        ),
+        AfterValidator(startswithVowel),
+    ]
+):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
