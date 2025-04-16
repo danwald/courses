@@ -1,11 +1,19 @@
 from enum import Enum
+from decimal import Decimal
 
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 
 
 class ModelClass(str, Enum):
     foo = "foo"
     bar = "bar"
+
+class Item(BaseModel):
+    name: str
+    description: str | None
+    price: Decimal
+    tarrif: Decimal | None = None
 
 fake_items_db = {
         "items":["foo", "bar", "baz",],
@@ -45,3 +53,12 @@ async def items(item_id: str):
 @app.get("/items/")
 async def get_item(skip: int=0, limit: int=10):
     return fake_items_db['items'][skip:skip+limit]
+
+@app.post("/items/{item_id}")
+async def  create_item(item: Item, item_id: int, q: str|None = None):
+    item_dict = item.dict()
+    item_dict['gross_price'] = item.price * (1+(item.tarrif or 0))
+    result = {'item_id': item_id, **item_dict}
+    if q:
+        result['q'] = q
+    return result
