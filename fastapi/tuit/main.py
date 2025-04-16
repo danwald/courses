@@ -2,7 +2,7 @@ from enum import Enum
 from decimal import Decimal
 from typing import Annotated
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Path
 from pydantic import BaseModel, AfterValidator
 
 
@@ -64,15 +64,18 @@ async def  create_item(item: Item, item_id: int, q: str|None = None):
         result['q'] = q
     return result
 
-def startswithVowel(data: str) -> None:
+def startswithVowel(data: str) -> str:
     if not data:
         raise ValueError('empty data')
 
     if data.lower()[0] not in 'aeiou':
         raise ValueError('Doesnt start with a vowel')
 
-@app.get("/query/")
+    return data
+
+@app.get("/query/{item_id}")
 async def get_querys(
+    item_id: Annotated[ int, Path(title='Id of item', gt=0,lt=100)],
     q : Annotated [
         str|None,
         Query(
@@ -85,7 +88,7 @@ async def get_querys(
         AfterValidator(startswithVowel),
     ]
 ):
-    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    results = {"item_id": item_id}
     if q:
         results.update({"q": q})
     return results
