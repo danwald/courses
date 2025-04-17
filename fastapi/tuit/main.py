@@ -2,7 +2,7 @@ from enum import Enum
 from decimal import Decimal
 from typing import Annotated, Literal
 
-from fastapi import FastAPI, HTTPException, Query, Path
+from fastapi import FastAPI, HTTPException, Query, Path, Body
 from pydantic import BaseModel, AfterValidator, Field
 
 
@@ -15,6 +15,10 @@ class Item(BaseModel):
     description: str | None
     price: Decimal
     tarrif: Decimal | None = None
+
+class User(BaseModel):
+    username: str
+    fullname: str
 
 fake_items_db = {
         "items":["foo", "bar", "baz",],
@@ -73,6 +77,12 @@ async def  create_item(item: Item, item_id: int, q: str|None = None):
         result['q'] = q
     return result
 
+@app.put("/items/{item_id}")
+async def update_item(
+    item_id: int, item: Item, user: User, importance: Annotated[int, Body(gt=0)], q: list[str] = []
+):
+    return {"item_id": item_id, "item": item.dict(), "user": user.dict(), "importance": importance, "q": q}
+
 def startswithVowel(data: str) -> str:
     if not data:
         raise ValueError('empty data')
@@ -104,4 +114,4 @@ async def get_querys(
 
 @app.get("/query/get_items/")
 async def get_items(filter_query: Annotated[FilterParams, Query()]):
-    return filter_query
+    return filter_querykkkkkkkkkkkkkkkk
