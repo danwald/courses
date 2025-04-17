@@ -1,9 +1,9 @@
 from enum import Enum
 from decimal import Decimal
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import FastAPI, HTTPException, Query, Path
-from pydantic import BaseModel, AfterValidator
+from pydantic import BaseModel, AfterValidator, Field
 
 
 class ModelClass(str, Enum):
@@ -20,6 +20,15 @@ fake_items_db = {
         "items":["foo", "bar", "baz",],
         "db": dict(one=1, two=2, three=3),
 }
+
+class FilterParams(BaseModel):
+    model_config = {"extra": "forbid"}
+
+    limit : int = Field(100, gt=0, lte=100)
+    offset : int = Field(0, ge=0)
+    order_by: Literal["created_at", "updated_at"] = "created_at"
+    tags:  list[str] = list()
+
 
 app = FastAPI()
 
@@ -52,8 +61,8 @@ async def items(item_id: str):
         raise HTTPException(status_code=404, detail=f"Item not found for key {item_id}")
 
 @app.get("/fake_items/")
-async def get_item(skip: int=0, limit: int=10):
-    return fake_items_db['items'][skip:skip+limit]
+async def get_item(params: Annotated[FilterParams, Query()]):
+    return fake_items_db['items'][params.offset:params.offset+params.limit]
 
 @app.post("/items/{item_id}")
 async def  create_item(item: Item, item_id: int, q: str|None = None):
@@ -92,3 +101,7 @@ async def get_querys(
     if q:
         results.update({"q": q})
     return results
+
+@app.get("/query/get_items/")
+async def get_items(filter_query: Annotated[FilterParams, Query()]):
+    return filter_query
