@@ -12,8 +12,8 @@ class ModelClass(str, Enum):
 
 class Item(BaseModel):
     name: str
-    description: str | None
-    price: Decimal
+    description: str | None = Field(default=None, min_length=10, description='description of item')
+    price: Decimal = Field(gt=0, description='No free items')
     tarrif: Decimal | None = None
 
 class User(BaseModel):
