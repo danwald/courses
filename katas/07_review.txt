@@ -1,0 +1,23 @@
+http://codekata.com/kata/kata07-howd-i-do/
+
+Reviewing: https://github.com/danwald/async_download/blob/main/async_download/cli.py
+
+Good Coder:
+- use of ABC for stategy
+-
+
+Bad Coder :
+- missing not for coro just has link
+- l44 use logger with appropriate levels
+- l63:64 merge
+- l79 should be utf-8
+- l100 no type for headers
+- l111 hardcoded timeout
+- not isort
+- no black format
+- missing tests for mock headers/downloads
+
+
+Bug Hunter:
+- l:39 fails to read all urls if decofing fails, use codec
+- l:75 ignores urlparams so data can be overwritten
