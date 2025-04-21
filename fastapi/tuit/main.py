@@ -1,4 +1,5 @@
 from enum import Enum
+from datetime import timedelta
 from decimal import Decimal
 from typing import Annotated, Literal
 
@@ -20,6 +21,7 @@ class Item(BaseModel):
     price: Decimal = Field(gt=0, description='No free items')
     tarrif: Decimal | None = None
     images: list[Image] | None = None
+    process_after: Annotated[timedelta, Body()]
 
 class User(BaseModel):
     username: str
