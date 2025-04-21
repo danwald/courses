@@ -3,7 +3,7 @@ from datetime import timedelta
 from decimal import Decimal
 from typing import Annotated, Literal
 
-from fastapi import FastAPI, HTTPException, Query, Path, Body
+from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie
 from pydantic import BaseModel, AfterValidator, Field, HttpUrl
 
 
@@ -86,9 +86,9 @@ async def  create_item(item: Item, item_id: int, q: str|None = None):
 
 @app.put("/items/{item_id}")
 async def update_item(
-    item_id: int, item: Item, user: User, importance: Annotated[int, Body(gt=0)], q: list[str] = []
+        item_id: int, item: Item, user: User, importance: Annotated[int, Body(gt=0)], q: list[str] = [], ads: Annotated[str, Cookie()] = None
 ):
-    return {"item_id": item_id, "item": item.dict(), "user": user.dict(), "importance": importance, "q": q}
+    return {"item_id": item_id, "item": item.dict(), "user": user.dict(), "importance": importance, "q": q, 'ads': ads}
 
 def startswithVowel(data: str) -> str:
     if not data:
