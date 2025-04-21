@@ -3,18 +3,23 @@ from decimal import Decimal
 from typing import Annotated, Literal
 
 from fastapi import FastAPI, HTTPException, Query, Path, Body
-from pydantic import BaseModel, AfterValidator, Field
+from pydantic import BaseModel, AfterValidator, Field, HttpUrl
 
 
 class ModelClass(str, Enum):
     foo = "foo"
     bar = "bar"
 
+class Image(BaseModel):
+    url: HttpUrl
+    name: str
+
 class Item(BaseModel):
     name: str
     description: str | None = Field(default=None, min_length=10, description='description of item')
     price: Decimal = Field(gt=0, description='No free items')
     tarrif: Decimal | None = None
+    images: list[Image] | None = None
 
 class User(BaseModel):
     username: str
