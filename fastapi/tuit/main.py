@@ -11,6 +11,11 @@ class ModelClass(str, Enum):
     foo = "foo"
     bar = "bar"
 
+class Cookies(BaseModel):
+    session_id: str
+    fatebook_tracker: str | None = None
+    googall_tracker: str| None = None
+
 class Image(BaseModel):
     url: HttpUrl
     name: str
@@ -86,9 +91,10 @@ async def  create_item(item: Item, item_id: int, q: str|None = None, user_agent:
 
 @app.put("/items/{item_id}")
 async def update_item(
-        item_id: int, item: Item, user: User, importance: Annotated[int, Body(gt=0)], q: list[str] = [], ads: Annotated[str, Cookie()] = None
+        item_id: int, item: Item, user: User, importance: Annotated[int, Body(gt=0)],
+        q: list[str] = [],
 ):
-    return {"item_id": item_id, "item": item.dict(), "user": user.dict(), "importance": importance, "q": q, 'ads': ads}
+    return {"item_id": item_id, "item": item.dict(), "user": user.dict(), "importance": importance, "q": q,}
 
 def startswithVowel(data: str) -> str:
     if not data:
@@ -120,5 +126,8 @@ async def get_querys(
     return results
 
 @app.get("/query/get_items/")
-async def get_items(filter_query: Annotated[FilterParams, Query()]):
-    return filter_querykkkkkkkkkkkkkkkk
+async def get_items(
+   filter_query: Annotated[FilterParams, Query()],
+   cookies: Annotated[Cookies, Cookie()]
+):
+    return filter_query, cookies
