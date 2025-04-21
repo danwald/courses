@@ -3,7 +3,7 @@ from datetime import timedelta
 from decimal import Decimal
 from typing import Annotated, Literal
 
-from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie
+from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header
 from pydantic import BaseModel, AfterValidator, Field, HttpUrl
 
 
@@ -76,10 +76,10 @@ async def get_item(params: Annotated[FilterParams, Query()]):
     return fake_items_db['items'][params.offset:params.offset+params.limit]
 
 @app.post("/items/{item_id}")
-async def  create_item(item: Item, item_id: int, q: str|None = None):
+async def  create_item(item: Item, item_id: int, q: str|None = None, user_agent: Annotated[str|None, Header()] = None):
     item_dict = item.dict()
     item_dict['gross_price'] = item.price * (1+(item.tarrif or 0))
-    result = {'item_id': item_id, **item_dict}
+    result = {'item_id': item_id, **item_dict, 'user_agent': {'User-Agent': user_agent}}
     if q:
         result['q'] = q
     return result
