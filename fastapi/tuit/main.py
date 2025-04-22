@@ -76,7 +76,11 @@ async def items(item_id: str):
     try:
         return {"message": fake_items_db['db'][item_id]}
     except KeyError:
-        raise HTTPException(status_code=404, detail=f"Item not found for key {item_id}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"Item not found for key {item_id}",
+            headers={"X-Error": "Boom goes the dynamite"}
+        )
 
 @app.get("/fake_items/")
 async def get_item(params: Annotated[FilterParams, Query()]):
