@@ -3,7 +3,7 @@ from datetime import timedelta
 from decimal import Decimal
 from typing import Annotated, Literal
 
-from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header
+from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header, File, UploadFile
 from pydantic import BaseModel, AfterValidator, Field, HttpUrl
 
 
@@ -137,3 +137,11 @@ async def get_items(
 @app.post("/user/public", response_model=User, response_model_exclude=['password'])
 async def get_user(user: User) -> User:
     return user
+
+@app.post("/files/")
+async def get_file(file: Annotated[bytes, File(description='File as bytes')]) -> dict[str, int]:
+    return {'file_size': len(file)}
+
+@app.post("/uploadFile/")
+async def upload_file(files: list[UploadFile]) -> dict[str, list[str]]:
+    return {'filenames': [f.filename for f in files]}
