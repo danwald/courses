@@ -31,6 +31,8 @@ class Item(BaseModel):
 class User(BaseModel):
     username: str
     fullname: str
+    password: str| None = None
+
 
 fake_items_db = {
         "items":["foo", "bar", "baz",],
@@ -131,3 +133,7 @@ async def get_items(
    cookies: Annotated[Cookies, Cookie()]
 ):
     return filter_query, cookies
+
+@app.post("/user/public", response_model=User, response_model_exclude=['password'])
+async def get_user(user: User) -> User:
+    return user
