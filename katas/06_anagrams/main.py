@@ -47,7 +47,7 @@ def main():
     test_set = AnagramSets.from_file('wordlist-test.txt')
     assert len(test_set) == 11
     print(test_set)
-    print(AnagramSets.from_file('wordlist.txt'))
+    print(AnagramSets.from_file('../data/wordlist.txt'))
 
 
 if __name__ == "__main__":
