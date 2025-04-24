@@ -86,8 +86,17 @@ async def items(item_id: str):
 async def get_item(params: Annotated[FilterParams, Query()]):
     return fake_items_db['items'][params.offset:params.offset+params.limit]
 
-@app.post("/items/{item_id}", tags=["Items", "Users"])
-async def  create_item(item: Item, item_id: int, q: str|None = None, user_agent: Annotated[str|None, Header()] = None):
+async def verify_foo_header(foo: Annotated[str, Header()]):
+    if foo != 'bar':
+        raise HTTPException(status_code=403, detail="don't have the right foo header")
+
+@app.post("/items/{item_id}", tags=["Items", "Users"], dependencies=[Depends(verify_foo_header)])
+async def  create_item(
+    item: Item,
+    item_id: int,
+    q: str|None = None,
+    user_agent: Annotated[str|None, Header()] = None,
+):
     item_dict = item.dict()
     item_dict['gross_price'] = item.price * (1+(item.tarrif or 0))
     result = {'item_id': item_id, **item_dict, 'user_agent': {'User-Agent': user_agent}}
