@@ -71,7 +71,7 @@ async def models(model_name: ModelClass):
         case ModelClass.bar:
             return {"message": f"barie {model_name.value}"}
 
-@app.get("/fake_items/{item_id}")
+@app.get("/fake_items/{item_id}", tags=["Fake Items"])
 async def items(item_id: str):
     try:
         return {"message": fake_items_db['db'][item_id]}
@@ -82,11 +82,11 @@ async def items(item_id: str):
             headers={"X-Error": "Boom goes the dynamite"}
         )
 
-@app.get("/fake_items/")
+@app.get("/fake_items/", tags=["Fake Items"])
 async def get_item(params: Annotated[FilterParams, Query()]):
     return fake_items_db['items'][params.offset:params.offset+params.limit]
 
-@app.post("/items/{item_id}")
+@app.post("/items/{item_id}", tags=["Items", "Users"])
 async def  create_item(item: Item, item_id: int, q: str|None = None, user_agent: Annotated[str|None, Header()] = None):
     item_dict = item.dict()
     item_dict['gross_price'] = item.price * (1+(item.tarrif or 0))
@@ -95,7 +95,7 @@ async def  create_item(item: Item, item_id: int, q: str|None = None, user_agent:
         result['q'] = q
     return result
 
-@app.put("/items/{item_id}")
+@app.put("/items/{item_id}", tags=["Items", "Users"])
 async def update_item(
         item_id: int, item: Item, user: User, importance: Annotated[int, Body(gt=0)],
         q: list[str] = [],
@@ -111,7 +111,7 @@ def startswithVowel(data: str) -> str:
 
     return data
 
-@app.get("/query/{item_id}")
+@app.get("/query/{item_id}", tags=["Items"])
 async def get_querys(
     item_id: Annotated[ int, Path(title='Id of item', gt=0,lt=100)],
     q : Annotated [
@@ -138,14 +138,14 @@ async def get_items(
 ):
     return filter_query, cookies
 
-@app.post("/user/public", response_model=User, response_model_exclude=['password'])
+@app.post("/user/public", response_model=User, response_model_exclude=['password'], tags=["Users"])
 async def get_user(user: User) -> User:
     return user
 
-@app.post("/files/")
+@app.post("/files/", tags=["files"])
 async def get_file(file: Annotated[bytes, File(description='File as bytes')]) -> dict[str, int]:
     return {'file_size': len(file)}
 
-@app.post("/uploadFile/")
+@app.post("/uploadFile/", tags=["files"])
 async def upload_file(files: list[UploadFile]) -> dict[str, list[str]]:
     return {'filenames': [f.filename for f in files]}
