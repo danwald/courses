@@ -102,6 +102,10 @@ async def update_item(
 ):
     return {"item_id": item_id, "item": item.dict(), "user": user.dict(), "importance": importance, "q": q,}
 
+@app.patch("/items/", tags=["Items"])
+async def patch_item(item: Item):
+    return {"item": item.dict(exclude_unset=True)}
+
 def startswithVowel(data: str) -> str:
     if not data:
         raise ValueError('empty data')
