@@ -144,8 +144,18 @@ async def get_user(user: User) -> User:
 
 @app.post("/files/", tags=["files"])
 async def get_file(file: Annotated[bytes, File(description='File as bytes')]) -> dict[str, int]:
+    """
+    Upload file
+
+    - will return the size of file in bytes
+    """
     return {'file_size': len(file)}
 
 @app.post("/uploadFile/", tags=["files"])
 async def upload_file(files: list[UploadFile]) -> dict[str, list[str]]:
+    """
+    Upload files with names
+
+    - will return a list of filenames uploaded
+    """
     return {'filenames': [f.filename for f in files]}
