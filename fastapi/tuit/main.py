@@ -3,7 +3,7 @@ from datetime import timedelta
 from decimal import Decimal
 from typing import Annotated, Literal
 
-from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header, File, UploadFile
+from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header, File, UploadFile, Depends
 from pydantic import BaseModel, AfterValidator, Field, HttpUrl
 
 
@@ -128,7 +128,8 @@ async def get_querys(
             deprecated=True,
         ),
         AfterValidator(startswithVowel),
-    ]
+    ],
+    params: Annotated[FilterParams, Depends(FilterParams)]
 ):
     results = {"item_id": item_id}
     if q:
