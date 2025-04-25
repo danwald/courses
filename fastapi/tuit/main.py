@@ -5,7 +5,10 @@ from typing import Annotated, Literal
 
 from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header, File, UploadFile, Depends
 from pydantic import BaseModel, AfterValidator, Field, HttpUrl
+from fastapi.security import OAuth2PasswordBearer
 
+
+o2_scheme_pass = OAuth2PasswordBearer(tokenUrl="token")
 
 class ModelClass(str, Enum):
     foo = "foo"
@@ -173,3 +176,7 @@ async def upload_file(files: list[UploadFile]) -> dict[str, list[str]]:
     - will return a list of filenames uploaded
     """
     return {'filenames': [f.filename for f in files]}
+
+@app.get("/auth/items", tags=["Auth"])
+async def get_auth_items(token: Annotated[str, Depends(o2_scheme_pass)]) -> dict[str, str]:
+    return {"token": token}
