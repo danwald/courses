@@ -155,9 +155,21 @@ async def get_items(
 ):
     return filter_query, cookies
 
+
 @app.post("/user/public", response_model=User, response_model_exclude=['password'], tags=["Users"])
 async def get_user(user: User) -> User:
     return user
+
+def fake_decode_token(token):
+    return User(username= f"{token}fakedecode", fullname = "JohnDoe")
+
+async def get_current_user(token: Annotated[str, o2_scheme_pass]):
+    return fake_decode_token(token)
+
+@app.get("/users/me", tags=["Auth", "Users"])
+
+async def read_users(current_user: Annotated[User, Depends(get_current_user)]):
+    return current_user
 
 @app.post("/files/", tags=["files"])
 async def get_file(file: Annotated[bytes, File(description='File as bytes')]) -> dict[str, int]:
@@ -176,6 +188,7 @@ async def upload_file(files: list[UploadFile]) -> dict[str, list[str]]:
     - will return a list of filenames uploaded
     """
     return {'filenames': [f.filename for f in files]}
+
 
 @app.get("/auth/items", tags=["Auth"])
 async def get_auth_items(token: Annotated[str, Depends(o2_scheme_pass)]) -> dict[str, str]:
