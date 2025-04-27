@@ -3,9 +3,10 @@ from datetime import timedelta
 from decimal import Decimal
 from typing import Annotated, Literal
 
-from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header, File, UploadFile, Depends
+from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header, File, UploadFile, Depends, status
 from pydantic import BaseModel, AfterValidator, Field, HttpUrl
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
 
 
 o2_scheme_pass = OAuth2PasswordBearer(tokenUrl="token")
@@ -34,13 +35,41 @@ class Item(BaseModel):
 class User(BaseModel):
     username: str
     fullname: str
-    password: str| None = None
+    disabled: bool | None = None
 
+class UserInDB(User):
+    password: str | None = None
 
 fake_items_db = {
         "items":["foo", "bar", "baz",],
         "db": dict(one=1, two=2, three=3),
 }
+
+fake_user_db = {
+    'danwald': {
+        'username': 'danwald',
+        'fullname': 'dan wald',
+        'password': 'fakehashed'+'secret',
+        'disabled': False,
+    },
+    'johndoe': {
+        'username': 'johndoe',
+        'fullname': 'john doe',
+        'password': 'fakehashed'+'secret2',
+        'disabled': True,
+    },
+}
+
+def get_db_user(db, username: str) -> UserInDB | None:
+    if username in db:
+        return UserInDB(**db[username])
+
+def fake_decode_token(token):
+    return get_db_user(fake_user_db, token)
+
+
+def fake_hash_password(password: str):
+    return "fakehashed" + password
 
 class FilterParams(BaseModel):
     model_config = {"extra": "forbid"}
@@ -160,15 +189,38 @@ async def get_items(
 async def get_user(user: User) -> User:
     return user
 
-def fake_decode_token(token):
-    return User(username= f"{token}fakedecode", fullname = "JohnDoe")
 
-async def get_current_user(token: Annotated[str, o2_scheme_pass]):
-    return fake_decode_token(token)
+async def get_current_user(token: Annotated[str, Depends(o2_scheme_pass)]):
+    user = fake_decode_token(token)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='Invalid auth creds',
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return user
+
+
+async def get_current_active_user(user: Annotated[User, Depends(get_current_user)]):
+    if user.disabled:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return user
+
+@app.post("/token")
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    user_dict = fake_user_db.get(form_data.username)
+    if not user_dict:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    user = UserInDB(**user_dict)
+    hashed_password = fake_hash_password(form_data.password)
+    if not hashed_password == user.password:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+
+    return {"access_token": user.username, "token_type": "bearer"}
+
 
 @app.get("/users/me", tags=["Auth", "Users"])
-
-async def read_users(current_user: Annotated[User, Depends(get_current_user)]):
+async def read_users(current_user: Annotated[User, Depends(get_current_active_user)]):
     return current_user
 
 @app.post("/files/", tags=["files"])
