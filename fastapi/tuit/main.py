@@ -1,9 +1,11 @@
+
 from enum import Enum
+import time
 from datetime import timedelta, timezone, datetime
 from decimal import Decimal
 from typing import Annotated, Literal
 
-from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header, File, UploadFile, Depends, status
+from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header, File, UploadFile, Depends, status, Request
 from pydantic import BaseModel, AfterValidator, Field, HttpUrl
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
@@ -82,6 +84,7 @@ fake_user_db = {
     },
 }
 
+
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -120,6 +123,14 @@ class FilterParams(BaseModel):
 
 app = FastAPI()
 
+
+@app.middleware('http')
+async def set_process_time_header(request: Request, call_next):
+    start_time = time.perf_counter()
+    response = await call_next(request)
+    process_time = time.perf_counter() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+    return response
 
 @app.get("/")
 async def root():
