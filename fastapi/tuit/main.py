@@ -8,6 +8,8 @@ from typing import Annotated, Literal
 from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header, File, UploadFile, Depends, status, Request
 from pydantic import BaseModel, AfterValidator, Field, HttpUrl
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.middleware.cors import CORSMiddleware
+
 
 from passlib.context import CryptContext
 import jwt
@@ -122,6 +124,19 @@ class FilterParams(BaseModel):
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=(
+        "http://localhost.tiangolo.com",
+        "https://localhost.tiangolo.com",
+        "http://localhost",
+        "http://localhost:8080",
+    ),
+    allow_credentials=True,
+    allow_methods=('*',),
+    allow_headers=('*',),
+)
 
 
 @app.middleware('http')
