@@ -16,12 +16,14 @@ from passlib.context import CryptContext
 import jwt
 from jwt.exceptions import InvalidTokenError
 
+from routers import items
+from internal import admin
+
 # to get a string like this run:
 # openssl rand -hex 32
 SECRET_KEY = "8bbee64502a938ef1d91e676ecd6a34b2000637fd79a83e58ef5b01eb0fa814a"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
 
 
 
@@ -36,23 +38,6 @@ class ModelClass(str, Enum):
     foo = "foo"
     bar = "bar"
 
-class Cookies(BaseModel):
-    session_id: str
-    fatebook_tracker: str | None = None
-    googall_tracker: str| None = None
-
-class Image(BaseModel):
-    url: HttpUrl
-    name: str
-
-class Item(BaseModel):
-    name: str
-    description: str | None = Field(default=None, min_length=10, description='description of item')
-    price: Decimal = Field(gt=0, description='No free items')
-    tarrif: Decimal | None = None
-    images: list[Image] | None = None
-    process_after: Annotated[timedelta, Body()]
-
 class User(BaseModel):
     username: str
     fullname: str
@@ -65,12 +50,6 @@ class UserInDB(User):
 o2_scheme_pass = OAuth2PasswordBearer(tokenUrl="token")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
-fake_items_db = {
-        "items":["foo", "bar", "baz",],
-        "db": dict(one=1, two=2, three=3),
-}
 
 fake_user_db = {
     'danwald': {
@@ -115,15 +94,6 @@ def fake_decode_token(token):
 def fake_hash_password(password: str):
     return "fakehashed" + password
 
-class FilterParams(BaseModel):
-    model_config = {"extra": "forbid"}
-
-    limit : int = Field(100, gt=0, lte=100)
-    offset : int = Field(0, ge=0)
-    order_by: Literal["created_at", "updated_at"] = "created_at"
-    tags:  set[str] = set()
-
-
 class HeroBase(SQLModel):
     name: str = SQLField(index=True)
     age: int | None = SQLField(default=None, index=True)
@@ -160,6 +130,13 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 app = FastAPI()
 
+app.include_router(items.router)
+app.include_router(
+    admin.router,
+    prefix="/admin",
+    tags=["admin"],
+    responses={418: {"description": "I'm a teapot"}},
+)
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
@@ -205,88 +182,6 @@ async def models(model_name: ModelClass):
             return {"message": f"Fooie {model_name.value}"}
         case ModelClass.bar:
             return {"message": f"barie {model_name.value}"}
-
-@app.get("/fake_items/{item_id}", tags=["Fake Items"])
-async def items(item_id: str):
-    try:
-        return {"message": fake_items_db['db'][item_id]}
-    except KeyError:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Item not found for key {item_id}",
-            headers={"X-Error": "Boom goes the dynamite"}
-        )
-
-@app.get("/fake_items/", tags=["Fake Items"])
-async def get_item(params: Annotated[FilterParams, Query()]):
-    return fake_items_db['items'][params.offset:params.offset+params.limit]
-
-async def verify_foo_header(foo: Annotated[str, Header()]):
-    if foo != 'bar':
-        raise HTTPException(status_code=403, detail="don't have the right foo header")
-
-@app.post("/items/{item_id}", tags=["Items", "Users"], dependencies=[Depends(verify_foo_header)])
-async def  create_item(
-    item: Item,
-    item_id: int,
-    q: str|None = None,
-    user_agent: Annotated[str|None, Header()] = None,
-):
-    item_dict = item.dict()
-    item_dict['gross_price'] = item.price * (1+(item.tarrif or 0))
-    result = {'item_id': item_id, **item_dict, 'user_agent': {'User-Agent': user_agent}}
-    if q:
-        result['q'] = q
-    return result
-
-@app.put("/items/{item_id}", tags=["Items", "Users"])
-async def update_item(
-        item_id: int, item: Item, user: User, importance: Annotated[int, Body(gt=0)],
-        q: list[str] = [],
-):
-    return {"item_id": item_id, "item": item.dict(), "user": user.dict(), "importance": importance, "q": q,}
-
-@app.patch("/items/", tags=["Items"])
-async def patch_item(item: Item):
-    return {"item": item.dict(exclude_unset=True)}
-
-def startswithVowel(data: str) -> str:
-    if not data:
-        raise ValueError('empty data')
-
-    if data.lower()[0] not in 'aeiou':
-        raise ValueError('Doesnt start with a vowel')
-
-    return data
-
-@app.get("/query/{item_id}", tags=["Items"])
-async def get_querys(
-    item_id: Annotated[ int, Path(title='Id of item', gt=0,lt=100)],
-    q : Annotated [
-        str|None,
-        Query(
-            min_length=2,
-            max_length=5,
-            title="QParams",
-            description="query parameter for fun",
-            deprecated=True,
-        ),
-        AfterValidator(startswithVowel),
-    ],
-    params: Annotated[FilterParams, Depends(FilterParams)]
-):
-    results = {"item_id": item_id}
-    if q:
-        results.update({"q": q})
-    return results
-
-@app.get("/query/get_items/")
-async def get_items(
-   filter_query: Annotated[FilterParams, Query()],
-   cookies: Annotated[Cookies, Cookie()]
-):
-    return filter_query, cookies
-
 
 @app.post("/user/public", response_model=User, response_model_exclude=['password'], tags=["Users"])
 async def get_user(user: User) -> User:
