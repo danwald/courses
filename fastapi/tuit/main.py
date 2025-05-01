@@ -5,7 +5,7 @@ from datetime import timedelta, timezone, datetime
 from decimal import Decimal
 from typing import Annotated, Literal
 
-from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header, File, UploadFile, Depends, status, Request
+from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header, File, UploadFile, Depends, status, Request, BackgroundTasks
 from pydantic import BaseModel, AfterValidator, Field, HttpUrl
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,6 +18,7 @@ from jwt.exceptions import InvalidTokenError
 
 from routers import items
 from internal import admin
+from internal import tasks
 
 # to get a string like this run:
 # openssl rand -hex 32
@@ -128,7 +129,10 @@ def get_session():
         yield session
 SessionDep = Annotated[Session, Depends(get_session)]
 
-app = FastAPI()
+def log_access(request: Request, bg: BackgroundTasks):
+    bg.add_task(tasks.accessLogger, f"{request.method} {request.url}")
+
+app = FastAPI(dependencies=[Depends(log_access)])
 
 app.include_router(items.router)
 app.include_router(
@@ -140,6 +144,7 @@ app.include_router(
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
+
 
 app.add_middleware(
     CORSMiddleware,

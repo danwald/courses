@@ -50,3 +50,4 @@ docker-compose.yaml
 .python-version
 package-lock.json
 database.db
+access.log
