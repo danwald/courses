@@ -132,7 +132,18 @@ SessionDep = Annotated[Session, Depends(get_session)]
 def log_access(request: Request, bg: BackgroundTasks):
     bg.add_task(tasks.accessLogger, f"{request.method} {request.url}")
 
-app = FastAPI(dependencies=[Depends(log_access)])
+app = FastAPI(
+    description = "This is the fastapi tuitorial https://fastapi.tiangolo.com/tutorial",
+    contact = { 'name': 'danwald', 'url': 'https://danwald.me', 'email': 'danwald79@gmail.com'},
+    openapi_tags = [
+        {"name": "admin", "description": "admin pages",},
+        {"name": "Users", "description": "users related examples",},
+        {"name": "Auth", "description": "OAuth examples",},
+        {"name": "files", "description": "send files",},
+        {"name": "Heros", "description": "heros examples",},
+    ],
+    dependencies=[Depends(log_access)]
+)
 
 app.include_router(items.router)
 app.include_router(
