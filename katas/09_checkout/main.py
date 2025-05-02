@@ -1,8 +1,38 @@
 #http://codekata.com/kata/kata09-back-to-the-checkout/
+import csv
+from pathlib import Path
+
+from dataclasses import dataclass
+
+@dataclass
+class Discount:
+    quant: int
+    price: float
+
+    @classmethod
+    def parse_discount(cls, st: str, delimiter=':'):
+        if st:
+            quant, price = st.split(delimiter)
+            return cls(int(quant), float(price))
+
+@dataclass
+class Item:
+    sku: str
+    price: float
+    discount: Discount | None = None
+
+class Prices(dict):
+    @classmethod
+    def from_file(cls, path: Path):
+        with open(path, newline='') as fp:
+            return cls(
+                (r['sku'],Item(r['sku'], float(r['cost']), Discount.parse_discount(r['vol'])))
+                for r in csv.DictReader(fp)
+            )
 
 class Checkout:
-    def __init__(self,  rules_path: str) -> None:
-        self.rules_path = rules_path
+    def __init__(self, prices: Prices) -> None:
+        self.prices = prices
 
     @property
     def total(self) -> float:
@@ -12,7 +42,7 @@ class Checkout:
         pass
 
 def price(items, rules):
-    co = Checkout(rules)
+    co = Checkout(Prices.from_file(rules))
     for item in items:
         co.scan(item)
     return co.total
@@ -35,7 +65,7 @@ def test_totals(rules):
     assert 190 == price("DABABA", rules)
 
 def test_incremental(rules):
-    co = Checkout(rules)
+    co = Checkout(Prices.from_file(rules))
     assert   0 == co.total
     co.scan("A");  assert  50 == co.total
     co.scan("B");  assert  80 == co.total
@@ -46,7 +76,7 @@ def test_incremental(rules):
 
 def main():
     rules = 'data/prices.csv'
-    test_incremental(rules)
+    #test_incremental(rules)
     test_totals(rules)
 
 if __name__ == "__main__":
