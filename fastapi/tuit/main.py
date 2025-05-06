@@ -17,6 +17,7 @@ import jwt
 from jwt.exceptions import InvalidTokenError
 
 from routers import items
+from routers import ws
 from internal import admin
 from internal import tasks
 
@@ -142,10 +143,11 @@ app = FastAPI(
         {"name": "files", "description": "send files",},
         {"name": "Heros", "description": "heros examples",},
     ],
-    dependencies=[Depends(log_access)]
+    #dependencies=[Depends(log_access)]
 )
 
 app.include_router(items.router)
+app.include_router(ws.router)
 app.include_router(
     admin.router,
     prefix="/admin",
