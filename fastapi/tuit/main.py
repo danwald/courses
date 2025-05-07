@@ -22,6 +22,10 @@ from routers import ws
 from internal import admin
 from internal import tasks
 
+from fastapi.middleware.wsgi import WSGIMiddleware
+from flask import Flask, request
+from markupsafe import escape
+
 
 class Settings(BaseSettings):
     SECRET_KEY: str =  "8bbee64502a938ef1d91e676ecd6a34b2000637fd79a83e58ef5b01eb0fa814a" # `openssl rand -hex 32`
@@ -29,6 +33,15 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
 settings = Settings()
+
+flask_app = Flask(__name__)
+
+
+@flask_app.route("/")
+def flask_main():
+    name = request.args.get("name", "World")
+    return f"Hello, {escape(name)} from Flask!"
+
 
 class Token(BaseModel):
     access_token : str
@@ -176,6 +189,8 @@ app.add_middleware(
     allow_methods=('*',),
     allow_headers=('*',),
 )
+
+app.mount("/flask", WSGIMiddleware(flask_app))
 
 
 @app.middleware('http')
