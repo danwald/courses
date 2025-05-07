@@ -1,7 +1,7 @@
 #http://codekata.com/kata/kata09-back-to-the-checkout/
 import csv
 from pathlib import Path
-
+from collections import Counter
 from dataclasses import dataclass
 
 @dataclass
@@ -30,21 +30,28 @@ class Prices(dict):
                 for r in csv.DictReader(fp)
             )
 
-class Checkout:
-    def __init__(self, prices: Prices) -> None:
+class Checkout(Counter):
+    def __init__(self, prices: Prices, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.prices = prices
 
     @property
     def total(self) -> float:
-        return 0.0
+        ret = 0.0
+        for sku, quant in self.items():
+            price = self.prices[sku]
+            if bulk:=price.discount:
+                dis_cnt, quant = divmod(quant, bulk.quant)
+                ret += (dis_cnt*bulk.price)
+            ret += quant*price.price
+        return ret
 
     def scan(self, item: str) -> None:
-        pass
+        self.update(item)
 
 def price(items, rules):
     co = Checkout(Prices.from_file(rules))
-    for item in items:
-        co.scan(item)
+    co.scan(items)
     return co.total
 
 def test_totals(rules):
@@ -76,7 +83,7 @@ def test_incremental(rules):
 
 def main():
     rules = 'data/prices.csv'
-    #test_incremental(rules)
+    test_incremental(rules)
     test_totals(rules)
 
 if __name__ == "__main__":
