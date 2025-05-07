@@ -4,6 +4,9 @@ from pathlib import Path
 from collections import Counter
 from dataclasses import dataclass
 
+
+# https://github.com/faif/python-patterns/blob/master/patterns/behavioral/strategy.py
+
 @dataclass
 class Discount:
     quant: int
