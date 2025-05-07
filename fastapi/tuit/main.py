@@ -12,7 +12,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Field as SQLField
 from sqlmodel import Session, SQLModel, create_engine, select
-
+from pydantic_settings import BaseSettings
 from passlib.context import CryptContext
 import jwt
 from jwt.exceptions import InvalidTokenError
@@ -22,13 +22,13 @@ from routers import ws
 from internal import admin
 from internal import tasks
 
-# to get a string like this run:
-# openssl rand -hex 32
-SECRET_KEY = "8bbee64502a938ef1d91e676ecd6a34b2000637fd79a83e58ef5b01eb0fa814a"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+class Settings(BaseSettings):
+    SECRET_KEY: str =  "8bbee64502a938ef1d91e676ecd6a34b2000637fd79a83e58ef5b01eb0fa814a" # `openssl rand -hex 32`
+    ALGORITHM: str =  "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
+settings = Settings()
 
 class Token(BaseModel):
     access_token : str
@@ -217,7 +217,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
 
@@ -228,7 +228,7 @@ async def get_current_user(token: Annotated[str, Depends(o2_scheme_pass)]):
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, setting.SECRET_KEY, algorithms=[settings.ALGORITHM])
         username = payload.get("sub")
         if username is None:
             raise credentials_exception
@@ -258,7 +258,7 @@ async def login_for_access_token(
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
