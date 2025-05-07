@@ -4,6 +4,7 @@ import time
 from datetime import timedelta, timezone, datetime
 from decimal import Decimal
 from typing import Annotated, Literal
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Query, Path, Body, Cookie, Header, File, UploadFile, Depends, status, Request, BackgroundTasks
 from pydantic import BaseModel, AfterValidator, Field, HttpUrl
@@ -122,9 +123,6 @@ sqlite_url = f"sqlite:///{sqlite_file_name}"
 connect_args = {"check_same_thread": False}
 engine = create_engine(sqlite_url, connect_args=connect_args)
 
-def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
-
 def get_session():
     with Session(engine) as session:
         yield session
@@ -132,6 +130,15 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 def log_access(request: Request, bg: BackgroundTasks):
     bg.add_task(tasks.accessLogger, f"{request.method} {request.url}")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print('Creating tables', end='')
+    SQLModel.metadata.create_all(engine)
+    print('...Done')
+    yield
+    print('Ciao')
 
 app = FastAPI(
     description = "This is the fastapi tuitorial https://fastapi.tiangolo.com/tutorial",
@@ -143,6 +150,7 @@ app = FastAPI(
         {"name": "files", "description": "send files",},
         {"name": "Heros", "description": "heros examples",},
     ],
+    lifespan=lifespan,
     #dependencies=[Depends(log_access)]
 )
 
@@ -154,9 +162,6 @@ app.include_router(
     tags=["admin"],
     responses={418: {"description": "I'm a teapot"}},
 )
-@app.on_event("startup")
-def on_startup():
-    create_db_and_tables()
 
 
 app.add_middleware(
