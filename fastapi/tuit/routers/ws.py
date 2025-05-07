@@ -7,6 +7,7 @@ from fastapi import (
     Query,
     WebSocket,
     WebSocketException,
+    WebSocketDisconnect,
     status,
 )
 router = APIRouter(
@@ -25,6 +26,7 @@ html = """
         <h1>WebSocket Chat</h1>
         <form action="" onsubmit="sendMessage(event)">
             <label>Item ID: <input type="text" id="itemId" autocomplete="off" value="foo"/></label>
+            <label>Handle: <input type="text" id="handleId" autocomplete="off" required/></label>
             <label>Token: <input type="text" id="token" autocomplete="off" value="some-key-token"/></label>
             <button onclick="connect(event)">Connect</button>
             <hr>
@@ -36,9 +38,10 @@ html = """
         <script>
         var ws = null;
             function connect(event) {
+                var handleId = document.getElementById("handleId")
                 var itemId = document.getElementById("itemId")
                 var token = document.getElementById("token")
-                ws = new WebSocket("ws://localhost:8000/ws/items/" + itemId.value + "/ws?token=" + token.value);
+                ws = new WebSocket("ws://localhost:8000/ws/items/" + itemId.value + "/" + handleId.value + "/ws?token=" + token.value);
                 ws.onmessage = function(event) {
                     var messages = document.getElementById('messages')
                     var message = document.createElement('li')
@@ -58,7 +61,26 @@ html = """
     </body>
 </html>
 """
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: list[WebSocket] = []
 
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        self.active_connections.remove(websocket)
+
+    async def send_personal_message(self, message: str, websocket: WebSocket):
+        await websocket.send_text(message)
+
+    async def broadcast(self, message: str):
+        for connection in self.active_connections:
+            await connection.send_text(message)
+
+
+manager = ConnectionManager()
 @router.get("/")
 async def get():
     return HTMLResponse(html)
@@ -79,20 +101,25 @@ async def websocket_endpoint(websocket: WebSocket):
         data = await websocket.receive_text()
         await websocket.send_text(f"Message text was: {data}")
 
-@router.websocket("/items/{item_id}/ws")
+@router.websocket("/items/{item_id}/{handle}/ws")
 async def websocket_endpoint(
     *,
     websocket: WebSocket,
     item_id: str,
     q: int | None = None,
+    handle: str,
     cookie_or_token: Annotated[str, Depends(get_cookie_or_token)],
 ):
-    await websocket.accept()
-    while True:
-        data = await websocket.receive_text()
-        await websocket.send_text(
-            f"Session cookie or query token value is: {cookie_or_token}"
-        )
-        if q is not None:
-            await websocket.send_text(f"Query parameter q is: {q}")
-        await websocket.send_text(f"Message text was: {data}, for item ID: {item_id}")
+    await manager.connect(websocket)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            await websocket.send_text(
+                f"Session cookie or query token value is: {cookie_or_token}"
+            )
+            if q is not None:
+                await websocket.send_text(f"Query parameter q is: {q}")
+            await websocket.send_text(f"Message text was: {data}, for item ID: {item_id} via {handle}")
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+        await manager.broadcast(f"Client #{handle} left the chat")
