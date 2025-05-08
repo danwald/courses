@@ -8,7 +8,7 @@ Create a Persistent Volume called log-volume. It should make use of a storage cl
 
 Next, create a PVC called log-claim requesting a minimum of 200Mi of storage. This PVC should bind to log-volume.
 
-Mount this in a pod called logger at the location /var/www/nginx. This pod should use the image nginx:alpine.a
+Mount this in a pod called logger at the location /var/www/nginx. This pod should use the image nginx:alpine
 
 
 ----
