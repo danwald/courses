@@ -3,33 +3,57 @@ import csv
 from pathlib import Path
 from collections import Counter
 from dataclasses import dataclass
+from typing import Any, Protocol
+
 
 
 # https://github.com/faif/python-patterns/blob/master/patterns/behavioral/strategy.py
 
-@dataclass
-class Discount:
+class Discount(Protocol):
+    def get_discounted_price(price: float, quantity: int) -> float: ...
+
+class VolDiscount(Discount):
     quant: int
     price: float
 
+    def __init__(self, quant, price):
+        self.quant, self.price = quant, price
+
     @classmethod
-    def parse_discount(cls, st: str, delimiter=':'):
-        if st:
+    def parse_discount(cls, record: dict[Any, Any], key='vol', delimiter=':'):
+        if st:= record.get(key):
             quant, price = st.split(delimiter)
             return cls(int(quant), float(price))
 
+    def get_discounted_price(self, price: float, quant: int) -> float:
+        ret = 0.0
+        dis_cnt, quant = divmod(quant, self.quant)
+        ret += (dis_cnt*self.price)
+        ret += quant*price
+        return ret
+
+
+class Discounts:
+    discounts = (VolDiscount,)
+
+    @staticmethod
+    def get_discount(record: dict[Any, Any]) -> Discount:
+        for KlassDiscount in Discounts.discounts:
+            if discount:= KlassDiscount.parse_discount(record):
+                return  discount
 @dataclass
 class Item:
     sku: str
     price: float
     discount: Discount | None = None
 
+
 class Prices(dict):
     @classmethod
     def from_file(cls, path: Path):
         with open(path, newline='') as fp:
             return cls(
-                (r['sku'],Item(r['sku'], float(r['cost']), Discount.parse_discount(r['vol'])))
+                (r['sku'],Item(r['sku'], float(r['cost']), Discounts.get_discount(r)))
                 for r in csv.DictReader(fp)
             )
 
@@ -43,10 +67,10 @@ class Checkout(Counter):
         ret = 0.0
         for sku, quant in self.items():
             price = self.prices[sku]
-            if bulk:=price.discount:
-                dis_cnt, quant = divmod(quant, bulk.quant)
-                ret += (dis_cnt*bulk.price)
-            ret += quant*price.price
+            if discount:=price.discount:
+                ret += discount.get_discounted_price(price.price, quant)
+            else:
+                ret += quant*price.price
         return ret
 
     def scan(self, item: str) -> None:
