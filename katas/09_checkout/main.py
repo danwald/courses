@@ -4,7 +4,7 @@ from pathlib import Path
 from collections import Counter
 from dataclasses import dataclass
 from typing import Any, Protocol
-
+from decimal import Decimal
 
 
 # https://github.com/faif/python-patterns/blob/master/patterns/behavioral/strategy.py
@@ -32,9 +32,23 @@ class VolDiscount(Discount):
         ret += quant*price
         return ret
 
+class SaleDiscount(Discount):
+    off: Decimal
+
+    def __init__(self, off: Decimal):
+        self.off =  off
+
+    @classmethod
+    def parse_discount(cls, record: dict[Any, Any], key='sale'):
+        if st:= record.get(key):
+            return cls(Decimal(st))
+
+    def get_discounted_price(self, price: float, quant: int) -> float:
+        return float(quant*Decimal(price)*(Decimal(1.0) - self.off))
+
 
 class Discounts:
-    discounts = (VolDiscount,)
+    discounts = (VolDiscount, SaleDiscount)
 
     @staticmethod
     def get_discount(record: dict[Any, Any]) -> Discount:
@@ -97,6 +111,7 @@ def test_totals(rules):
     assert 175 == price("AAABB", rules)
     assert 190 == price("AAABBD", rules)
     assert 190 == price("DABABA", rules)
+    assert 180 == price("EE", rules)
 
 def test_incremental(rules):
     co = Checkout(Prices.from_file(rules))
