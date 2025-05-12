@@ -10,11 +10,11 @@ from decimal import Decimal
 # https://github.com/faif/python-patterns/blob/master/patterns/behavioral/strategy.py
 
 class Discount(Protocol):
-    def get_discounted_price(price: float, quantity: int) -> float: ...
+    def get_discounted_price(price: Decimal, quantity: int) -> Decimal: ...
 
 class VolDiscount(Discount):
     quant: int
-    price: float
+    price: Decimal
 
     def __init__(self, quant, price):
         self.quant, self.price = quant, price
@@ -23,10 +23,10 @@ class VolDiscount(Discount):
     def parse_discount(cls, record: dict[Any, Any], key='vol', delimiter=':'):
         if st:= record.get(key):
             quant, price = st.split(delimiter)
-            return cls(int(quant), float(price))
+            return cls(int(quant), Decimal(price))
 
-    def get_discounted_price(self, price: float, quant: int) -> float:
-        ret = 0.0
+    def get_discounted_price(self, price: Decimal, quant: int) -> Decimal:
+        ret = Decimal(0.0)
         dis_cnt, quant = divmod(quant, self.quant)
         ret += (dis_cnt*self.price)
         ret += quant*price
@@ -43,8 +43,8 @@ class SaleDiscount(Discount):
         if st:= record.get(key):
             return cls(Decimal(st))
 
-    def get_discounted_price(self, price: float, quant: int) -> float:
-        return float(quant*Decimal(price)*(Decimal(1.0) - self.off))
+    def get_discounted_price(self, price: Decimal, quant: int) -> Decimal:
+        return Decimal(quant*Decimal(price)*(Decimal(1.0) - self.off))
 
 
 class Discounts:
@@ -58,7 +58,7 @@ class Discounts:
 @dataclass
 class Item:
     sku: str
-    price: float
+    price: Decimal
     discount: Discount | None = None
 
 
@@ -67,7 +67,7 @@ class Prices(dict):
     def from_file(cls, path: Path):
         with open(path, newline='') as fp:
             return cls(
-                (r['sku'],Item(r['sku'], float(r['cost']), Discounts.get_discount(r)))
+                (r['sku'],Item(r['sku'], Decimal(r['cost']), Discounts.get_discount(r)))
                 for r in csv.DictReader(fp)
             )
 
@@ -77,8 +77,8 @@ class Checkout(Counter):
         self.prices = prices
 
     @property
-    def total(self) -> float:
-        ret = 0.0
+    def total(self) -> Decimal:
+        ret = Decimal(0.0)
         for sku, quant in self.items():
             price = self.prices[sku]
             if discount:=price.discount:
