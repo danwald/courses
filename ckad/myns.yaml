@@ -1,0 +1,8 @@
+# k create namespace --dry-run=client -oyaml myns
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: myns
+spec: {}
+status: {}
