@@ -1,0 +1,22 @@
+#https://kubernetes.io/docs/tasks/debug/debug-application/get-shell-running-container/
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: shell-demo
+  name: shell-demo
+spec:
+  volumes:
+  - name: shared-data
+    emptyDir: {}
+  containers:
+  - image: nginx
+    name: shell-demo
+    resources: {}
+    volumeMounts:
+      - name: shared-data
+        mountPath: /usr/share/nginx/html
+  dnsPolicy: Default
+  hostNetwork: true
