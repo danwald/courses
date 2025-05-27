@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ng-nod-sel
+  name: ng-nod-sel
+spec:
+  containers:
+  - image: nginx
+    name: ng-nod-sel
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  nodeSelector:
+    kubernetes.io/hostname: docker-desktop
+  tolerations:
+  - key: "tier"
+    operator: "Equal"
+    value: "frontend"
+    effect: "NoSchedule"
+status: {}
