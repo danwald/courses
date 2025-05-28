@@ -34,14 +34,17 @@ class LT(Enum):
     START_COMMENT = 3
     END_COMMENT = 4
 
+def has_end_comment(line) -> bool:
+    return line.rfind('*/') != -1
+
 def line_type(line: str) -> LT:
     line = line.strip()
     if not line:
         return LT.SANS_CODE
     if line.startswith('//'):
-        return LT.COMMENT
+        return LT.COMMENT if not has_end_comment(line) else LT.END_COMMENT
     if line.startswith('/*'):
-        return LT.START_COMMENT
+        return LT.START_COMMENT if not has_end_comment(line) else LT.END_COMMENT
     if line.endswith('*/'):
         return LT.END_COMMENT
     return LT.CODE
@@ -78,5 +81,12 @@ def line_count(fs: str, debug=False) -> int:
     return count
 
 if __name__ == "__main__":
+    assert (
+        line_type('"Quotation \" /* comment inside the string */ \";') == LT.CODE
+    )
+    assert (
+        line_type(
+        '   //*****//***/// Slightly pathological comment ending...') == LT.END_COMMENT
+    )
     assert line_count(THREE_LINES) == 3
-    assert line_count(FIVE_LINES, True) == 5
+    assert line_count(FIVE_LINES) == 5
