@@ -52,23 +52,24 @@ def line_count(fs: str, debug=False) -> int:
     count = 0
     in_comment = False
     for line in StringIO(initial_value=fs):
-        if not in_comment:
-            match line_type(line):
-                case  LT.CODE:
-                    count += 1
-                    if debug:
-                        print(f"code: {line}")
-                case LT.START_COMMENT:
-                    in_comment = True
-                    print(f"sc: {line}")
-                case LT.END_COMMENT:
-                    in_comment = False
-                    print(f"ec: {line}")
-                case LT.SANS_CODE | LT.COMMENT:
-                    print(f"c_sc: {line}")
-                    pass
-                case _:
-                    assert False
+        if in_comment and not line_type(line) == LT.END_COMMENT:
+            continue
+        match line_type(line):
+            case  LT.CODE:
+                count += 1
+                if debug:
+                    print(f"code: {line}")
+            case LT.START_COMMENT:
+                in_comment = True
+                print(f"sc: {line}")
+            case LT.END_COMMENT:
+                in_comment = False
+                print(f"ec: {line}")
+            case LT.SANS_CODE | LT.COMMENT:
+                print(f"c_sc: {line}")
+                pass
+            case _:
+                assert False
     print(count)
     return count
 
