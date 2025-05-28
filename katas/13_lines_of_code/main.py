@@ -61,18 +61,22 @@ def line_count(fs: str, debug=False) -> int:
                     print(f"code: {line}")
             case LT.START_COMMENT:
                 in_comment = True
-                print(f"sc: {line}")
+                if debug:
+                    print(f"sc: {line}")
             case LT.END_COMMENT:
                 in_comment = False
-                print(f"ec: {line}")
+                if debug:
+                    print(f"ec: {line}")
             case LT.SANS_CODE | LT.COMMENT:
-                print(f"c_sc: {line}")
+                if debug:
+                    print(f"c_sc: {line}")
                 pass
             case _:
                 assert False
-    print(count)
+    if debug:
+        print(count)
     return count
 
 if __name__ == "__main__":
-    assert line_count(THREE_LINES, True) == 3
-    assert line_count(FIVE_LINES) == 5
+    assert line_count(THREE_LINES) == 3
+    assert line_count(FIVE_LINES, True) == 5
