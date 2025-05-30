@@ -10,7 +10,6 @@
 .agignore
 .coverage
 .nose-stopwatch-times
-.pre-commit-config.yaml
 .svn
 .version
 .env
