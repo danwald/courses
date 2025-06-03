@@ -13,6 +13,9 @@ spec:
     name: bb-user101
     resources: {}
     command: ["/bin/sh", "-c", "id && sleep 3600;"]
+    securityContext:
+      capabilities:
+        add: ["NET_ADMIN", "SYS_TIME"]
   dnsPolicy: ClusterFirst
   restartPolicy: Always
 status: {}
