@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: pod-bb-2-mounts
+  name: pod-bb-2-mounts
+spec:
+  volumes:
+  - name: dir-vol
+    emptyDir:
+  containers:
+  - command: ['sleep','3600']
+    image: busybox
+    name: pod-bb-2-mounts-0
+    volumeMounts:
+    - mountPath: /etc/foo
+      name: dir-vol
+  - command: ['sleep','3600']
+    image: busybox
+    name: pod-bb-2-mounts-1
+    volumeMounts:
+    - mountPath: /etc/foo
+      name: dir-vol
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
