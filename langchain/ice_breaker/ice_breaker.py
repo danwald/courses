@@ -15,7 +15,7 @@ if __name__ == "__main__":
     prompt_template = PromptTemplate(
         input_variables=["information"], template=summary_template
     )
-    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
+    llm = ChatOpenAI(temperature=0, model_name="gpt-4o-mini")
     chain = prompt_template | llm | StrOutputParser()
     linkedin_data = scrape_linkedin_profile("https://foo/bar", mock=True)
     res = chain.invoke(input={"information": linkedin_data})

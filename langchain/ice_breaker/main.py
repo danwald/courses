@@ -19,7 +19,7 @@ if __name__ == "__main__":
     prompt_template = PromptTemplate(
         input_variables=["information"], template=summary_template
     )
-    # llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
+    # llm = ChatOpenAI(temperature=0, model_name="gpt-4o-mini")
     llm = ChatOllama(model="llama3")
     chain = prompt_template | llm | StrOutputParser()
     res = chain.invoke(input={"information": information})
