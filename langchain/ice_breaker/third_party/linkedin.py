@@ -1,6 +1,6 @@
 import os
 import requests  # type: ignore
-from tying import Any
+from typing import Any
 
 
 def scrape_linkedin_profile(linkedin_profile_url: str, mock: bool = False) -> Any:
