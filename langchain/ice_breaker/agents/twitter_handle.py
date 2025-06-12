@@ -29,11 +29,11 @@ def lookup(name: str) -> str:
     agent_executor = AgentExecutor(agent=agent, tools=tools_for_agent, verbose=True)
 
     result = agent_executor.invoke(
-        input={"input": prompt_template.format_prompt(name_of_person=name)}
+        input={"input": prompt_template.format_prompt(name_of_person=name)},
+        handle_parsing_errors=True,
     )
 
-    linked_profile_url = str(result["output"])
-    return linked_profile_url
+    return str(result["output"])
 
 
 if __name__ == "__main__":
