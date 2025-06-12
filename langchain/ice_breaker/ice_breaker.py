@@ -23,9 +23,10 @@ def ice_breakwith(name: str, mock: bool = False) -> Any:
 if __name__ == "__main__":
     print("icebreaker")
     summary_template = """
-        given the information {information} about a person and {twitter_posts} want to create:
+        given the linkedin information {information} about a person and their latest twitter posts {twitter_posts} want to create:
         1. a short summary
         2. two interesting facts about them
+        Use information from both linkedin and twitter
     """
 
     prompt_template = PromptTemplate(
