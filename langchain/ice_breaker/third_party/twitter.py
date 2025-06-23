@@ -10,6 +10,7 @@ def get_user_tweets(
     """get twitt handerl,
     Manually scrape the information from the LinkedIn profile"""
 
+    mock = True
     tweet_list: list[dict[str, str]] = []
     if mock:
         gist_url = "https://gist.githubusercontent.com/emarco177/9d4fdd52dc432c72937c6e383dd1c7cc/raw/1675c4b1595ec0ddd8208544a4f915769465ed6a/eden-marco-tweets.json"
