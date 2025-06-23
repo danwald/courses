@@ -1,19 +1,29 @@
 # http://codekata.com/kata/kata18-transitive-dependencies/
 
-from collections import defaultdict
+from collections import defaultdict, deque
 from typing import Any
 
 
-class Deps(defaultdict[str, list[str]]):
+class Deps(defaultdict[str, deque[str]]):
     def __init__(self, *args: Any, **kwargs: Any):
-        super().__init__(list, *args, **kwargs)
+        super().__init__(deque, *args, **kwargs)
 
     def add_direct(self, k: str, *deps: str) -> None:
         for d in deps:
             self[k] += d
 
     def dependencies_for(self, k: str) -> list[str] | None:
-        return self.get(k)
+        deps = self.get(k, deque())
+        res = []
+        while deps:
+            c = deps.popleft()
+            if c not in res:
+                res.append(c)
+            for d in self.get(c, []):
+                if d not in res or d not in deps:
+                    deps.append(d)
+        print(res)
+        return res
 
 
 def test() -> None:
