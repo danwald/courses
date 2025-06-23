@@ -1,13 +1,13 @@
 from typing import Any
 
 from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
 
 from third_party.linkedin import scrape_linkedin_profile
 from third_party.twitter import get_user_tweets
 from agents.linkedin_lookup import lookup
 from agents.twitter_handle import lookup as twitter_lookup
+from output_parsers import summary_parser
 
 
 def ice_breakwith(name: str, mock: bool = False) -> Any:
@@ -27,13 +27,18 @@ if __name__ == "__main__":
         1. a short summary
         2. two interesting facts about them
         Use information from both linkedin and twitter
+        \n{format_instructions}
     """
 
     prompt_template = PromptTemplate(
-        input_variables=["information"], template=summary_template
+        input_variables=["information"],
+        template=summary_template,
+        partial_variables={
+            "format_instructions": summary_parser.get_format_instructions()
+        },
     )
     llm = ChatOpenAI(temperature=0, model_name="gpt-4o-mini")
-    chain = prompt_template | llm | StrOutputParser()
+    chain = prompt_template | llm | summary_parser
 
     linkedin_data, tweets = ice_breakwith("danny crasto dubai", mock=True)
     res = chain.invoke(input={"information": linkedin_data, "twitter_posts": tweets})
