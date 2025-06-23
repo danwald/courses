@@ -8,7 +8,7 @@ from agents.twitter_handle import lookup as twitter_lookup
 from output_parsers import summary_parser, Summary
 
 
-def ice_breakwith(name: str, mock: bool = False) -> tuple[Summary, str]:
+def ice_break_with(name: str, mock: bool = False) -> tuple[Summary, str]:
     linkedin_url = lookup(name)
     linkedin_data = scrape_linkedin_profile(linkedin_url, mock=mock)
 
@@ -42,4 +42,4 @@ def ice_breakwith(name: str, mock: bool = False) -> tuple[Summary, str]:
 
 if __name__ == "__main__":
     print("icebreaker")
-    ice_breakwith("danny crasto dubai")
+    ice_break_with("danny crasto dubai")
