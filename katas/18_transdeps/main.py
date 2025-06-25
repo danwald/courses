@@ -13,16 +13,18 @@ class Deps(defaultdict[str, deque[str]]):
             self[k] += d
 
     def dependencies_for(self, k: str) -> list[str] | None:
-        deps = self.get(k, deque())
+        deps = deque(self.get(k, deque()))
         res = []
         while deps:
             c = deps.popleft()
             if c not in res:
                 res.append(c)
             for d in self.get(c, []):
-                if d not in res or d not in deps:
+                if d not in deps:
                     deps.append(d)
-        print(res)
+            # print(res, deps)
+        res = list(sorted(res))
+        # print(k, res)
         return res
 
 
