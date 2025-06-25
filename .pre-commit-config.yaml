@@ -31,6 +31,8 @@ repos:
   hooks:
     # Run the linter.
     - id: ruff-check
-      args: [ --fix ]
+      args: ["check", "--select", "I", "--fix"]
+      types_or: [ python, pyi ]
     # Run the formatter.
     - id: ruff-format
+      types_or: [ python, pyi ]
