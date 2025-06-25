@@ -1,3 +1,7 @@
+from langchain.agents import tool
+
+
+@tool  # type: ignore
 def get_text_length(text: str) -> int:
     """Returns  the length of text by characters"""
     return len(text)
@@ -5,4 +9,5 @@ def get_text_length(text: str) -> int:
 
 if __name__ == "__main__":
     txt = "Hello React Langchain"
-    print(f"'{txt}' is {get_text_length(txt)} characters long")
+    result = get_text_length.invoke({"text": txt})
+    print(f"'{txt}' is {result} characters long")
