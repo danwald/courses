@@ -14,7 +14,8 @@ def dict_word_len_grouped(
 
 
 def main() -> None:
-    pass
+    d = dict_word_len_grouped()
+    print(f"dictionary size length {sum(len(words) for words in d.values())}")
 
 
 if __name__ == "__main__":
