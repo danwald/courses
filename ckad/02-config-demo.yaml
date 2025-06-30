@@ -1,0 +1,23 @@
+# https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/
+
+apiVersion: v1
+kind: Config
+preferences: {}
+
+clusters:
+- cluster:
+  name: development
+- cluster:
+  name: test
+
+users:
+- name: developer
+- name: experimenter
+
+contexts:
+- context:
+  name: dev-frontend
+- context:
+  name: dev-storage
+- context:
+  name: exp-test

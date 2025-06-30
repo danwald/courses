@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+    name: time-check
+spec:
+  containers:
+  - command: ["/bin/sh"]
+    args:
+    - "-c"
+    - "while true; do date | tee /opt/time/$LOG_FILE; sleep $TIME_FREQ ;done"
+    image: busybox
+    name: time-check
+    envFrom:
+      - configMapRef:
+          name: time-config
+    volumeMounts:
+    - name: opt-vol
+      mountPath: /opt/time
+  volumes:
+  - name: opt-vol
+    hostPath:
+      path: /opt/time # directory location on host
+  restartPolicy: Always
+status: {}

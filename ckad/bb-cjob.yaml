@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  creationTimestamp: null
+  name: bb-cjob
+spec:
+  startingDeadlineSeconds: 17
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+      name: bb-cjob
+    spec:
+      activeDeadlineSeconds: 12
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - command:
+            - /bin/sh
+            - -c
+            - date; echo "hello k8s";
+            image: busybox
+            name: bb-cjob
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: '*/1 * * * *'
+status: {}
