@@ -4,6 +4,7 @@ from langchain_core.agents import AgentAction, AgentFinish
 from langchain_openai import ChatOpenAI
 from langchain.agents.output_parsers.react_single_input import ReActSingleInputOutputParser
 from langchain.agents import tool
+from callbacks import AgentCallbackHandler
 
 
 def format_log_to_str(steps: [tuple[AgentAction, str]], obs_prefix: str='Obersvation: ', llm_prefix:str='Thought: ') -> str:
@@ -53,7 +54,7 @@ if __name__ == "__main__":
     prompt = PromptTemplate(template=template).partial(
         tools=render_text_description(tools), tool_names=",".join(t.name for t in tools)
     )
-    llm = ChatOpenAI(temperature=0, stop=["\nObservation", "Observation"])
+    llm = ChatOpenAI(temperature=0, stop=["\nObservation", "Observation"], callbacks=[AgentCallbackHandler()])
     intermediate_steps = []
     agent = (
         {
