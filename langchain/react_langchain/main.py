@@ -65,25 +65,28 @@ if __name__ == "__main__":
         llm |
         ReActSingleInputOutputParser()
     )
-    agent_step: [AgentAction | AgentFinish] = agent.invoke(
-        {
-            "input": "What's the length of the word DOG?",
-            "agent_scratchpad": intermediate_steps,
-        }
-    )
-    if isinstance(agent_step, AgentAction):
-        tool_name = agent_step.tool
-        tooled = find_tool_by_name(tool_name, tools)
-        tool_input = agent_step.tool_input
-        obs = tooled.func(tool_input)
-        print(obs)
-        intermediate_steps.append((agent_step, str(obs)))
+    agent_step = ''
+    while not isinstance(agent_step, AgentFinish):
+        agent_step: [AgentAction | AgentFinish] = agent.invoke(
+            {
+                "input": "What's the length of the word DOG?",
+                "agent_scratchpad": intermediate_steps,
+            }
+        )
+        if isinstance(agent_step, AgentAction):
+            tool_name = agent_step.tool
+            tooled = find_tool_by_name(tool_name, tools)
+            tool_input = agent_step.tool_input
+            obs = tooled.func(tool_input)
+            print(obs)
+            intermediate_steps.append((agent_step, str(obs)))
 
-    agent_step: [AgentAction | AgentFinish] = agent.invoke(
-        {
-            "input": "What's the length of the word DOG?",
-            "agent_scratchpad": intermediate_steps,
-        }
-    )
+        agent_step: [AgentAction | AgentFinish] = agent.invoke(
+            {
+                "input": "What's the length of the word DOG?",
+                "agent_scratchpad": intermediate_steps,
+            }
+        )
+
     if isinstance(agent_step, AgentFinish):
         print(agent_step.return_values)
