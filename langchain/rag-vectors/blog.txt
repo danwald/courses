@@ -1,0 +1,270 @@
+
+Search
+Write
+Sign up
+
+Sign in
+
+
+
+Top highlight
+
+Understanding Vector Indexing: A Comprehensive Guide
+MyScale
+MyScale
+
+Follow
+9 min read
+·
+Feb 13, 2024
+124
+
+
+
+
+In the early stages of database development, data were stored in basic tables. This method was straightforward, but as the amount of data grew, it became harder and slower to manage and retrieve information. Relational databases were then introduced, offering better ways to store and process data.
+
+An important technique in relational databases is indexing, which is very similar to the way books are stored in a library. Instead of looking through the entire library, you go directly to a specific section where the required book is placed. Indexing in databases works in a similar way, speeding up the process of finding the data you need.
+
+In this blog, we’ll cover the basics of vector indexing and how it is implemented using different techniques.
+
+What are Vector Embeddings
+Vector embeddings are simply the numerical representation that is converted from images, text, and audio. In simpler terms, a single mathematical vector is created against each item capturing the semantics or characteristics of that item. These vector embeddings are more easily understood by computational systems and compatible with machine learning models to understand relationships and similarities between different items.
+
+
+Specialized databases used to store these embedding vectors are known as vector databases. These databases take advantage of the mathematical properties of embeddings that allow similar items to be stored together. Different techniques are used to store similar vectors together and dissimilar vectors apart. They are vector indexing techniques.
+
+What is a Vector Index
+Vector indexing is not just about storing data, it’s about intelligently organizing the vector embeddings to optimize the retrieval process. This technique involves advanced algorithms to neatly arrange the high-dimensional vectors in a searchable and efficient manner. This arrangement is not random; it’s done in a way that similar vectors are grouped together, by which vector indexing allows quick and accurate similarity searches and pattern identification, especially for searching large and complex datasets.
+
+
+Let’s say you have a vector for each image, capturing its features. The vector index will organize these vectors in a way that makes it easier to find similar images (here). You can think of it as if you are organizing each person’s images separately. So, if you need a specific person’s picture from a particular event, instead of searching through all the pictures, you would only go through that person’s collection and easily find the image.
+
+Common Vector Indexing Techniques
+Different indexing techniques are used based on specific requirements. Let’s discuss some of these.
+
+Inverted File (IVF)
+This is the most basic indexing technique. It splits the whole data into several clusters using techniques like K-means clustering. Each vector of the database is assigned to a specific cluster. This structured arrangement of vectors allows the user to make the search queries way faster. When a new query comes, the system doesn’t traverse the whole dataset. Instead, it identifies the nearest or most similar clusters and searches for the specific document within those clusters.
+
+
+So, applying brute-force search exclusively within the relevant cluster, rather than across the entire database, not only enhances search speed but also considerably reduces query time.
+
+Variants of IVF: IVFFLAT, IVFPQ and IVFSQ
+There are different variants of IVF, depending on the specific requirement of the application. Let’s look at them in detail.
+
+IVFFLAT
+
+IVFFLAT is a simpler form of IVF. It partitions the dataset into clusters. However, within each cluster, it uses a flat structure (hence the name “FLAT”) for storing the vectors. IVFFLAT is designed to optimize the balance between search speed and accuracy.
+
+
+In each cluster, vectors are stored in a simple list or array without additional subdivision or hierarchical structures. When a query vector is assigned to a cluster, the nearest neighbor is found by conducting a brute-force search, examining each vector in the cluster’s list and calculating its distance to the query vector. IVFFLAT is employed in scenarios where the dataset isn’t considerably large, and the objective is to achieve high accuracy in the search process.
+
+IVFPQ
+
+IVFPQ is an advanced variant of IVF, which stands for Inverted File with Product Quantization. It also splits the data into clusters but each vector in a cluster is broken down into smaller vectors, and each part is encoded or compressed into a limited number of bits using product quantization.
+
+
+For a query vector, once the relevant cluster is identified, the algorithm compares the quantized representation of the query with the quantized representations of vectors within the cluster. This comparison is faster than comparing raw vectors due to the reduced dimensionality and size achieved through quantization. This method has two advantages over the previous method:
+
+The vectors are stored in a compact way, taking less space than the raw vectors.
+The query process is even faster because it doesn’t compare all raw vectors but encoded vectors.
+IVFSQ
+
+File System with Scalar Quantization (IVFSQ), like other IVF variants, also segments the data into clusters. However, the major difference is its quantization technique. In IVFSQ, each vector in a cluster is passed through scalar quantization. This means that each dimension of the vector is handled separately.
+
+
+In simple terms, for every dimension of a vector, we set a predefined value or range. These values or ranges help decide which cluster a vector belongs to. Each component of the vector is then matched against these predefined values to find its place in a cluster. This method of breaking down and quantizing each dimension separately makes the process more straightforward. It’s especially useful for lower-dimensional data, as it simplifies encoding and reduces the space needed for storage.
+
+Hierarchical Navigable Small World (HNSW) Algorithm
+The Hierarchical Navigable Small World (HNSW) algorithm is a sophisticated method for storing and fetching data efficiently. Its graph-like structure takes inspiration from two different techniques: the probability skip list and Navigable Small World (NSW).
+
+To better understand HNSW, let’s first try to understand the basic concepts related to this algorithm.
+
+Skip List
+
+A skip list is an advanced data structure that combines the advantages of two traditional structures: the quick insertion capability of a linked list and the rapid retrieval characteristic of an array. It achieves this through its multi-layer architecture where the data is organized across multiple layers, with each layer containing a subset of the data points.
+
+
+Starting from the bottom layer, which contains all data points, each succeeding layer skips some points and thus has fewer data points, ultimately the topmost layer will have the smallest number of data points.
+
+To search for a data point in a skip list, we start from the highest layer and go from left to right exploring each data point. At any point, if the queried value is greater than the current datapoint, we move back to the previous datapoint in the layer below and resume the search from left to right until we locate the exact point.
+
+Navigable Small World (NSW)
+
+Navigable Small World (NSW) is similar to a proximate graph where nodes are linked together based on how similar they are to each other. The greedy method is used to search for the nearest neighbor point.
+
+We always begin with a pre-defined entry point, which connects to multiple nearby nodes. We identify which of these nodes are the closest to our query vector and move there. This process iterates until there is no node closer to the query vector than the current one, serving as the stopping condition for the algorithm.
+
+Now, let’s get back to the main topic and see how it works.
+
+How HNSW is Developed
+So, what happens in HNSW is that we take the motivation from the skip list, and it creates layers like the skip list. But for the connection between the data points, it makes a graph-like connection between the nodes. The nodes at each layer are connected not only to the current layer nodes but also to the nodes of the lower layers. The nodes at the top are very few and intensity increases when we go down to the lower layers. The last layer contains all the data points of the database. This is what the HNSW architecture looks like.
+
+
+The architecture of the HNSW algorithm
+
+How Does a Search Query Work in HNSW
+The algorithm starts at the predefined node of the topmost layer. It then computes the distance between the connected nodes of the current layer and those in the layer below. The algorithm shifts to a lower layer if the distance to a node in that layer is less than the distance to nodes in the current layer. This process continues until the last layer is reached or it reaches a node that has the minimum distance from all other connecting nodes. The final layer, Layer 0, contains all data points, providing a comprehensive and detailed representation of the dataset. This layer is crucial to ensure that the search incorporates all potential nearest neighbors.
+
+Different variants of HNSW: HNSWFLAT and HNSWSQ
+Just like IVFFLAT and IVFSQ, where one stores raw vectors and the other stores quantized ranges, the same process applies to HNSWFLAT and HNSWSQ. In HNSWFLAT, the raw vectors are stored as they are, while in HNSWSQ, the vectors are stored in a quantized form. Apart from this key difference in data storage, the overall process and methodology of indexing and searching are the same in both HNSWFLAT and HNSWSQ.
+
+Multi-Scale Tree Graph (MSTG) Algorithm
+Standard Inverted File Indexing (IVF) partitions a vector dataset into numerous clusters. However, a notable limitation is the substantial growth in index size for massive datasets, requiring the storage of many cluster representative vectors. The scalability of IVF is hindered by the significant memory overhead associated with this approach.
+
+Multi-Stage Tree Graph (MSTG) is developed by MyScale and it overcomes this through a hierarchical design. Unlike IVF which has a single layer of cluster vectors, MSTG creates multiple layers, which means less persistent centroids in the memory. For example, if a dataset needs 10,000 cluster vectors in IVF, all 10,000 have to be stored, consuming substantial memory. In MSTG, using a 2-layer hierarchy of 100 clusters per layer, only 200 vectors need storage — the 100 top-layer vectors, and their 100 direct children.
+
+MSTG combines the advantages of both tree and graph-based algorithms. It builds fast, searches fast, and remains fast and accurate under different filtered search ratios while being resource and cost-efficient.
+
+Conclusion
+Vector databases have revolutionized the way data is stored, providing not just enhanced speed but also immense utility across diverse domains such as artificial intelligence and big data analytics. In an era of exponential data growth, particularly in unstructured forms, the applications of vector databases are limitless. Customized indexing techniques further amplify the power and effectiveness of these databases, for example, boosting filtered vector search. MyScale optimizes the filter vector search with the unique MSTG algorithm, providing a powerful solution for complex, large-scale vector searches. Try MyScale today to experience the advanced vector search.
+
+Indexing
+Vector Database
+Vector Search
+Vector Embeddings
+124
+
+
+
+MyScale
+Written by MyScale
+420 followers
+·
+21 following
+An integrated vector database, combining the power of SQL and vector for your AI data workloads. https://myscale.com/ #VectorSearch #MachineLearning #LLM
+
+
+Follow
+No responses yet
+
+Write a response
+
+What are your thoughts?
+
+Cancel
+Respond
+More from MyScale
+Agentic AI vs Generative AI: Understanding the Key Differences and Impacts
+MyScale
+MyScale
+
+Agentic AI vs Generative AI: Understanding the Key Differences and Impacts
+Large Language Models (LLMs) like GPT can generate text, answer questions, and assist with many tasks. However, they are reactive, meaning…
+Dec 4, 2024
+441
+19
+Enhancing Advanced RAG Systems Using Reranking with LangChain
+MyScale
+MyScale
+
+Enhancing Advanced RAG Systems Using Reranking with LangChain
+Understanding LangChain and Its Impact
+Jun 7, 2024
+15
+How to Summarize Large Documents with LangChain and OpenAI
+MyScale
+MyScale
+
+How to Summarize Large Documents with LangChain and OpenAI
+Large language models have made many tasks easier like making chatbots, language translation, text summarization, etc. We used to write…
+May 24, 2024
+153
+2
+Building a RAG Application in 10 min with Claude 3 and Hugging Face
+MyScale
+MyScale
+
+Building a RAG Application in 10 min with Claude 3 and Hugging Face
+In the realm of AI advancements, RAG applications stand out as transformative tools reshaping diverse sectors. These applications offer…
+Aug 14, 2024
+24
+See all from MyScale
+Recommended from Medium
+How to Build Lightning-Fast Semantic Search with Vector Databases
+Vijay Gadhave
+Vijay Gadhave
+
+How to Build Lightning-Fast Semantic Search with Vector Databases
+Note: If you’re not a medium member, CLICK HERE
+
+May 28
+39
+Optimizing Chunking, Embedding, and Vectorization for Retrieval-Augmented Generation
+Adnan Masood, PhD.
+Adnan Masood, PhD.
+
+Optimizing Chunking, Embedding, and Vectorization for Retrieval-Augmented Generation
+A Comprehensive Technical Treatise on Contemporary Methods
+May 10
+62
+2
+Building a Multi-Agent AI System with LangGraph and LangSmith
+Level Up Coding
+In
+
+Level Up Coding
+
+by
+
+Fareed Khan
+
+Building a Multi-Agent AI System with LangGraph and LangSmith
+A step-by-step guide to creating smarter AI with sub-agents
+
+Jun 2
+1.2K
+20
+Building a Semantic Search Engine with Vector Databases: A Practical Guide
+Amdjed Bensalah
+Amdjed Bensalah
+
+Building a Semantic Search Engine with Vector Databases: A Practical Guide
+In this article, we’ll dive deep into how vector databases work and build a practical semantic search application to find similar questions
+Jan 3
+21
+You Don’t Need RAG! Build a Q&A AI Agent in 30 Minutes 🚀
+ITNEXT
+In
+
+ITNEXT
+
+by
+
+Javier Ramos
+
+You Don’t Need RAG! Build a Q&A AI Agent in 30 Minutes 🚀
+Is RAG Dead? Exploring simpler AI Agents alternatives by building tools that query the source data directly
+
+Jun 10
+1.6K
+55
+Evolution of RAGs
+Soumendra's Blog
+Soumendra's Blog
+
+Evolution of RAGs
+RAG combines information retrieval with text generation, allowing AI systems to access and leverage external knowledge before generating…
+
+Apr 10
+3
+See more recommendations
+Help
+
+Status
+
+About
+
+Careers
+
+Press
+
+Blog
+
+Privacy
+
+Rules
+
+Terms
+
+Text to speech
