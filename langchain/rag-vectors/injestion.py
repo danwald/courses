@@ -4,9 +4,7 @@ from langchain_community.document_loaders import TextLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from langchain_text_splitters import CharacterTextSplitter
-
-INDEX_NAME = "blogs-embeddings-index"
-BLOGS_FILE = "blog.txt"
+from settings import BLOGS_FILE, INDEX_NAME
 
 if __name__ == "__main__":
     print(f"hello pinecone")
