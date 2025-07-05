@@ -1,6 +1,20 @@
 import tempfile
 import codecs
 from collections import defaultdict
+from pathlib import Path
+
+
+class Words(defaultdict[int, list[str]]):
+    def __init__(self, path: Path = Path("../data/worlist.txt")) -> None:
+        self.path = path
+
+    def process(self) -> None:
+        pass
+
+    def __str__(self) -> str:
+        if not self:
+            self.process()
+        return f"dictionary size length {sum(len(words) for words in self.values())}"
 
 
 def dict_word_len_grouped(
