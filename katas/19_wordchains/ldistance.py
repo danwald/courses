@@ -1,3 +1,6 @@
+import sys
+
+
 def distance(s: str, t: str) -> int:
     # https://en.wikipedia.org/wiki/Levenshtein_distance#Definition
     if not s:
@@ -16,6 +19,10 @@ def distance(s: str, t: str) -> int:
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 2:
+        print(f"{distance(sys.argv[1], sys.argv[2])}")
+        sys.exit(0)
+
     assert distance("foo", "foo") == 0
     assert distance("kitten", "sitting") == 3
     assert distance("foo", "bar") == 3
