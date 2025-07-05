@@ -1,3 +1,4 @@
+import tempfile
 import codecs
 from collections import defaultdict
 
@@ -18,5 +19,14 @@ def main() -> None:
     print(f"dictionary size length {sum(len(words) for words in d.values())}")
 
 
+def tests() -> None:
+    with tempfile.NamedTemporaryFile(mode="w+") as tmp:
+        tmp.write("cat\ncog\ncot\ndog\n")
+        tmp.flush()
+        td = dict_word_len_grouped(tmp.name)
+        print(f"dictionary size length {sum(len(words) for words in td.values())}")
+
+
 if __name__ == "__main__":
-    main()
+    tests()
+    # main()
