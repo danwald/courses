@@ -5,14 +5,14 @@ from pathlib import Path
 
 
 class Words(defaultdict[int, set[str]]):
-    def __init__(self, path: Path = Path("../data/worlist.txt")) -> None:
+    def __init__(self, path: Path = Path("../data/wordlist.txt")) -> None:
         super().__init__(set)
         self.path = path
         if not path.exists():
             raise ValueError(f"Invalid file path {self.path}")
 
     def process(self) -> None:
-        with codecs.open(self.path, "r", encoding="utf-8", errors="ignore") as fp:
+        with codecs.open(str(self.path), "r", encoding="utf-8", errors="ignore") as fp:
             for line in fp:
                 for word in line.strip().split(" "):
                     self[len(word)].add(word)
@@ -21,7 +21,6 @@ class Words(defaultdict[int, set[str]]):
         if not self:
             self.process()
         return f"dictionary size length {sum(len(words) for words in self.values())}"
-
 
 
 def main() -> None:
