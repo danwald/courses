@@ -1,6 +1,8 @@
 import sys
+from functools import lru_cache
 
 
+@lru_cache(maxsize=1024)
 def distance(s: str, t: str) -> int:
     # https://en.wikipedia.org/wiki/Levenshtein_distance#Definition
     if not s:
