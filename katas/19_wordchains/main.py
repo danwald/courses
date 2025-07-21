@@ -42,10 +42,12 @@ class Words(defaultdict[int, set[str]]):
                 return False
 
             candidates = (cw for cw in self[len(word)] if distance(word, cw) == 1)
+            sol.append(word)
             for cw in candidates:
-                sol.append(word)
+                sol.append(cw)
                 bt(cw)
                 sol.pop()
+            sol.pop()
             return False
 
         bt(start)
@@ -64,6 +66,7 @@ def tests() -> None:
         td = Words(Path(tmp.name))
         print(f"{td}")
         print(td.chain("cog", "dog"))
+        print(td.chain("cat", "dog"))
 
 
 if __name__ == "__main__":
