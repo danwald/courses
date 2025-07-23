@@ -1,3 +1,5 @@
+from typing import Any
+
 from langchain_community.chat_models.openai import ChatOpenAI
 from langchain_community.embeddings.openai import OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
@@ -7,7 +9,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains.retrieval import create_retrieval_chain
 
 
-def run_llm(query: str) -> dict[str, str]:
+def run_llm(query: str) -> dict[str, Any]:
     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
     vectorstore = PineconeVectorStore(
         embedding=embeddings, index_name="langchain-docs-index"
