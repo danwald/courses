@@ -23,7 +23,7 @@ class Words(defaultdict[int, set[str]]):
             self.process()
         return f"dictionary size length {sum(len(words) for words in self.values())}"
 
-    def chain(self, start: str, end: str) -> list[list[str]]:
+    def chain(self, start: str, end: str) -> list[list[str]] | None:
         if not (start or end) or len(start) != len(end):
             raise ValueError(
                 f"Invalid start:'{start}' or end:'{end}' words. Empty or not same length"
@@ -38,20 +38,21 @@ class Words(defaultdict[int, set[str]]):
             if word == end:
                 result.append(sol[:])
                 return True
-            if word in sol:
-                return False
-
-            candidates = (cw for cw in self[len(word)] if distance(word, cw) == 1)
-            sol.append(word)
+            candidates = list(
+                cw
+                for cw in self[len(word)]
+                if word not in sol and distance(word, cw) == 1
+            )
+            print(f"{word} -> ({candidates}) <= {sol} <={self[len(word)]} ")
             for cw in candidates:
                 sol.append(cw)
-                bt(cw)
-                sol.pop()
-            sol.pop()
+                if not bt(cw):
+                    sol.pop()
+                return True
             return False
 
         bt(start)
-        return result
+        return result or None
 
 
 def main() -> None:
@@ -65,8 +66,8 @@ def tests() -> None:
         tmp.flush()
         td = Words(Path(tmp.name))
         print(f"{td}")
-        print(td.chain("cog", "dog"))
-        print(td.chain("cat", "dog"))
+        # print(f"cog -> {td.chain('cog', 'dog')} -> dog" )
+        print(f"cat -> {td.chain('cat', 'dog')} -> dog")
 
 
 if __name__ == "__main__":
