@@ -36,19 +36,20 @@ class Words(defaultdict[int, set[str]]):
 
         def bt(word: str) -> bool:
             if word == end:
+                sol.append(end)
                 result.append(sol[:])
                 return True
+            sol.append(word)
             candidates = list(
                 cw
                 for cw in self[len(word)]
-                if word not in sol and distance(word, cw) == 1
+                if cw not in sol and distance(word, cw) == 1
             )
-            print(f"{word} -> ({candidates}) <= {sol} <={self[len(word)]} ")
+            # print(f"{word} -> ({candidates}) = {sol} < = {self[len(word)]}")
             for cw in candidates:
-                sol.append(cw)
-                if not bt(cw):
+                if bt(cw):
                     sol.pop()
-                return True
+                    return True
             return False
 
         bt(start)
@@ -66,8 +67,8 @@ def tests() -> None:
         tmp.flush()
         td = Words(Path(tmp.name))
         print(f"{td}")
-        # print(f"cog -> {td.chain('cog', 'dog')} -> dog" )
-        print(f"cat -> {td.chain('cat', 'dog')} -> dog")
+        print(f"cog => {td.chain('cog', 'dog')} => dog")
+        # print(f"cat -> {td.chain('cat', 'dog')} -> dog")
 
 
 if __name__ == "__main__":
