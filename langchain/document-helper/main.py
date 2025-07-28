@@ -34,7 +34,7 @@ prompt = st.text_input("prompt", placeholder="How can I help you?")
 
 if prompt:
     with st.spinner("Generating input .."):
-        gen_result = run_llm(prompt)
+        gen_result = run_llm(query=prompt, chat_history=st.session_state[CHAT_KEY])
         sources = [
             str(doc.metadata["source"]) for doc in gen_result["source_documents"]
         ]
