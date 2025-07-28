@@ -34,11 +34,11 @@ class Words(defaultdict[int, set[str]]):
         sol: list[str] = []
         result: list[list[str]] = []
 
-        def bt(word: str) -> bool:
+        def bt(word: str) -> None:
             if word == end:
                 sol.append(end)
                 result.append(sol[:])
-                return True
+                return
             sol.append(word)
             candidates = list(
                 cw
@@ -47,10 +47,9 @@ class Words(defaultdict[int, set[str]]):
             )
             # print(f"{word} -> ({candidates}) = {sol} < = {self[len(word)]}")
             for cw in candidates:
-                if bt(cw):
-                    sol.pop()
-                    return True
-            return False
+                bt(cw)
+                sol.pop()
+            return
 
         bt(start)
         return result or None
@@ -63,12 +62,21 @@ def main() -> None:
 
 def tests() -> None:
     with tempfile.NamedTemporaryFile(mode="w+") as tmp:
-        tmp.write("cat\ncog\ncot\ndog\n")
+        tmp.write("cat\ncog\ncot\ndog\nbot")
         tmp.flush()
         td = Words(Path(tmp.name))
-        print(f"{td}")
-        print(f"cog => {td.chain('cog', 'dog')} => dog")
-        # print(f"cat -> {td.chain('cat', 'dog')} -> dog")
+        assert td.chain("cog", "dog") == [["cog", "dog"]]
+        assert td.chain("cat", "dog") == [
+            ["cat", "cot", "cog", "dog"],
+            ["cat", "bat", "bot", "cot", "cog", "dog"],
+        ] or [["cat", "bat", "bot", "cot", "cog", "dog"], ["cat", "cot", "cog", "dog"]]
+
+        assert td.chain("dog", "cat") == [
+            ["dog", "cog", "cot", "bot", "bat", "cat"],
+            ["dog", "cog", "cot", "cat"],
+        ] or [["dog", "cog", "cot", "cat"], ["dog", "cog", "cot", "bot", "bat", "cat"]]
+
+        assert td.chain("dog", "pat") is None
 
 
 if __name__ == "__main__":
