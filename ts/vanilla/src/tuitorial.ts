@@ -69,3 +69,11 @@ function hello(name:string): string {
 }
 
 console.log(hello('danny'));
+
+const syblings: string[] = ['beuls', 'mose', 'dan'];
+
+function isInList(name:string, names:string[]): boolean {
+    return name in names;
+}
+console.log(`danny is in syblings: ${isInList('danny', syblings)}`);
+console.log(`dan is in syblings: ${isInList('danny', syblings)}`);
