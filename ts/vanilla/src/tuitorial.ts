@@ -64,8 +64,8 @@ products.push({type:'pants', brand: 'next'})
 console.log(products);
 
 
-function hello(name:string) {
-    console.log(`hello there ${name.toUpperCase()}`);
+function hello(name:string): string {
+    return `hello there ${name.toUpperCase()}`;
 }
 
-hello('danny');
+console.log(hello('danny'));
