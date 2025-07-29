@@ -77,3 +77,10 @@ function isInList(name:string, names:string[]): boolean {
 }
 console.log(`danny is in syblings: ${isInList('danny', syblings)}`);
 console.log(`dan is in syblings: ${isInList('danny', syblings)}`);
+
+
+function calDiscount(price: number, discount?: number): number {
+    return price - (discount || 0);
+}
+
+console.log(`discount on price ${calDiscount(100, 20)}`);
