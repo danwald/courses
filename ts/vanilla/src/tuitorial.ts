@@ -54,3 +54,11 @@ const mixed: (string| number)[] = [1,'one', 2, 'tow'];
 //colors.push(true);
 
 console.log(temperatures, colors, mixed);
+
+
+let bike: {type:string;brand:string;year:number} = {type:'bike', brand:'honda', year:2022};
+let shirt: {type:string;brand:string;year:number} = {type:'shirt', brand:'vanhusen', year:1999};
+let laptop: {type:string;brand:string;year:number} = {type:'laptop', brand:'apple', year:2024};
+const products:{type:string;brand:string;year?:number}[] = [bike, shirt, laptop];
+products.push({type:'pants', brand: 'next'})
+console.log(products);
