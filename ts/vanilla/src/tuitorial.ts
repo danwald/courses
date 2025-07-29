@@ -14,3 +14,10 @@ console.log(amount);
 let isAwe:boolean = true;
 isAwe = false;
 console.log(isAwe);
+
+
+let tax: number| string = 10;
+tax = 100;
+console.log(tax);
+tax = '$10';
+console.log(tax);
