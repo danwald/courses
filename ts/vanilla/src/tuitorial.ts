@@ -62,3 +62,10 @@ let laptop: {type:string;brand:string;year:number} = {type:'laptop', brand:'appl
 const products:{type:string;brand:string;year?:number}[] = [bike, shirt, laptop];
 products.push({type:'pants', brand: 'next'})
 console.log(products);
+
+
+function hello(name:string) {
+    console.log(`hello there ${name.toUpperCase()}`);
+}
+
+hello('danny');
