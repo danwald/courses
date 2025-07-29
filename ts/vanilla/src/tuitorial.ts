@@ -30,3 +30,16 @@ console.log(requestStatus);
 let noSure: any = 4;
 noSure = 'foo';
 console.log(noSure);
+
+
+const books: string[] = ['all', 'your', 'base'];
+
+let foundBook : string | undefined;
+
+for(let book of books) {
+    if (book == 'all') {
+        foundBook = book;
+        break;
+    }
+}
+console.log(foundBook?.toUpperCase())
