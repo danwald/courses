@@ -84,3 +84,16 @@ function calDiscount(price: number, discount?: number): number {
 }
 
 console.log(`discount on price ${calDiscount(100, 20)}`);
+
+function calScore(score: number, penality: number = 0): number {
+    return score - penality;
+}
+console.log(`score w/penality 0 ${calScore(100)}`);
+
+console.log(`discount on price ${calDiscount(100, 20)}`);
+
+function sum(message:string, ...numbers:number[]): string {
+    return `${message}: ${numbers.reduce((p,c) => {return p+c}), 0}`
+}
+
+console.log(sum('total',1,2,3,4,5));
