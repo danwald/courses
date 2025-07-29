@@ -21,3 +21,8 @@ tax = 100;
 console.log(tax);
 tax = '$10';
 console.log(tax);
+
+let requestStatus: 'pending' | 'error' | 'ok';
+//requestStatus = 'foo';
+requestStatus = 'ok';
+console.log(requestStatus);
