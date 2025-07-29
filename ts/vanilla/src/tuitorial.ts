@@ -43,3 +43,14 @@ for(let book of books) {
     }
 }
 console.log(foundBook?.toUpperCase())
+
+const temperatures: number[] = [1,2,3,4];
+//temperatures.push('foo');
+
+const colors: string[] = ['r', 'g', 'b'];
+//colors.push(true);
+//
+const mixed: (string| number)[] = [1,'one', 2, 'tow'];
+//colors.push(true);
+
+console.log(temperatures, colors, mixed);
