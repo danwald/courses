@@ -26,3 +26,7 @@ let requestStatus: 'pending' | 'error' | 'ok';
 //requestStatus = 'foo';
 requestStatus = 'ok';
 console.log(requestStatus);
+
+let noSure: any = 4;
+noSure = 'foo';
+console.log(noSure);
