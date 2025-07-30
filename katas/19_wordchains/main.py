@@ -31,33 +31,33 @@ class Words(defaultdict[int, set[str]]):
         if not self:
             self.process()
 
-        sol: list[str] = []
         result: list[list[str]] = []
+        stack: list[tuple[str, list[str]]] = [(start, [])]
 
-        def bt(word: str) -> None:
-            if word == end:
-                sol.append(end)
-                result.append(sol[:])
-                return
-            sol.append(word)
-            candidates = list(
+        while stack:
+            current_word, path = stack.pop()
+
+            if current_word == end:
+                result.append(path + [end])
+                continue
+
+            new_path = path + [current_word]
+            candidates = [
                 cw
-                for cw in self[len(word)]
-                if cw not in sol and distance(word, cw) == 1
-            )
-            # print(f"{word} -> ({candidates}) = {sol} < = {self[len(word)]}")
-            for cw in candidates:
-                bt(cw)
-                sol.pop()
-            return
+                for cw in self[len(current_word)]
+                if cw not in new_path and distance(current_word, cw) == 1
+            ]
 
-        bt(start)
+            for cw in candidates:
+                stack.append((cw, new_path))
+
         return result or None
 
 
 def main() -> None:
     d = Words()
     print(f"{d}")
+    assert d.chain("cog", "dog") == [["cog", "dog"]]
 
 
 def tests() -> None:
@@ -81,4 +81,4 @@ def tests() -> None:
 
 if __name__ == "__main__":
     tests()
-    # main()
+    main()
