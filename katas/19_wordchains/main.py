@@ -23,13 +23,19 @@ class Words(defaultdict[int, set[str]]):
             self.process()
         return f"dictionary size length {sum(len(words) for words in self.values())}"
 
-    def chain(self, start: str, end: str) -> list[list[str]] | None:
+    def chain(
+        self, start: str, end: str, debug: bool = False
+    ) -> list[list[str]] | None:
         if not (start or end) or len(start) != len(end):
             raise ValueError(
                 f"Invalid start:'{start}' or end:'{end}' words. Empty or not same length"
             )
         if not self:
             self.process()
+
+        if debug:
+            paths = len([w for w in self[len(start)] if distance(start, w) == 1])
+            print(f"'{start}':{paths} candidate word paths")
 
         result: list[list[str]] = []
         stack: list[tuple[str, list[str]]] = [(start, [])]
@@ -39,6 +45,8 @@ class Words(defaultdict[int, set[str]]):
 
             if current_word == end:
                 result.append(path + [end])
+                if debug:
+                    print(f"Found: {len(result)}", end="")
                 continue
 
             new_path = path + [current_word]
@@ -57,7 +65,7 @@ class Words(defaultdict[int, set[str]]):
 def main() -> None:
     d = Words()
     print(f"{d}")
-    assert d.chain("cog", "dog") == [["cog", "dog"]]
+    assert d.chain("cog", "dog", debug=True) == [["cog", "dog"]]
 
 
 def tests() -> None:
