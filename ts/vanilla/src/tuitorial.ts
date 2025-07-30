@@ -97,3 +97,9 @@ function sum(message:string, ...numbers:number[]): string {
 }
 
 console.log(sum('total',1,2,3,4,5));
+
+function logmessage(message:string): void{
+    console.log(message);
+    //return message;
+}
+logmessage('foo');
