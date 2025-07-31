@@ -114,3 +114,9 @@ function processInput(param:string | number): string|number {
 }
 console.log(processInput(12));
 console.log(processInput('foo'));
+
+function createEmployee({id}:{id:number}):{id:number;isActive:boolean}{
+    return { id, isActive: id % 2 === 0};
+}
+console.log(createEmployee({id:1}));
+console.log(createEmployee({id:2}));
