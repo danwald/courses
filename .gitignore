@@ -50,3 +50,4 @@ docker-compose.yaml
 package-lock.json
 database.db
 access.log
+.claude*
