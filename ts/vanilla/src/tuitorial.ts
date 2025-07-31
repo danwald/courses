@@ -125,3 +125,21 @@ function createStudent(student:{id:number, name:string}):{id:number;name:string}
     return { id:student.id, name:student.name.toUpperCase()};
 }
 console.log(createStudent({id:1, name:'foobar'}));
+
+
+function processData(
+    input: string|number,
+    config:{reversed:boolean} = {reversed:false}
+):string|number{
+    if(typeof(input) == 'number') {
+        return input*10;
+    }
+
+    return config.reversed
+        ? input.toUpperCase().split('').reverse().join('')
+        : input.toUpperCase();
+}
+
+console.log(processData(10));
+console.log(processData('foobar', {reversed:true}));
+console.log(processData('foob@R'));
