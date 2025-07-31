@@ -120,3 +120,8 @@ function createEmployee({id}:{id:number}):{id:number;isActive:boolean}{
 }
 console.log(createEmployee({id:1}));
 console.log(createEmployee({id:2}));
+
+function createStudent(student:{id:number, name:string}):{id:number;name:string}{
+    return { id:student.id, name:student.name.toUpperCase()};
+}
+console.log(createStudent({id:1, name:'foobar'}));
