@@ -165,3 +165,15 @@ const bob: Manager =
 for(const e of  [alice, steve, bob]) {
     printStaffDetails(e);
 }
+
+interface Computer {
+    readonly id: number;
+    brand: string;
+    ram: number;
+    storage?: number;
+    upgradeRam(to:number):number;
+
+}
+const c1: Computer = {id:1, brand:'apple', ram:1, upgradeRam(n:number):number{return n+this.ram}};
+console.log(c1);
+console.log(c1.upgradeRam(3));
