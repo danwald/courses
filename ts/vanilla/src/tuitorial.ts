@@ -103,3 +103,14 @@ function logmessage(message:string): void{
     //return message;
 }
 logmessage('foo');
+
+function processInput(param:string | number): string|number {
+    if (typeof param  === 'number') {
+        return param*2;
+    }
+    else {
+        return param.toUpperCase();
+    }
+}
+console.log(processInput(12));
+console.log(processInput('foo'));
