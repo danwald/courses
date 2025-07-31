@@ -143,3 +143,25 @@ function processData(
 console.log(processData(10));
 console.log(processData('foobar', {reversed:true}));
 console.log(processData('foob@R'));
+
+type department = 'sales' | 'hr' | 'tech' | 'finance';
+type Employee = { id: number; name: string; department: department };
+type Manager = { id: number; name: string; department: department; employees:Employee[] };
+type Staff = Employee | Manager;
+
+function printStaffDetails(staff: Staff): void {
+    let opt = `${staff.name}:${staff.id} works in ${staff.department}`;
+    if('employees' in staff) {
+        opt += ` and has ${staff.employees.length} employees reporting to them`;
+    }
+    console.log(opt)
+}
+
+const alice: Employee = {name:'alice', department:'sales', id:1};
+const steve: Employee = {name:'steve', department:'hr', id:2};
+const bob: Manager =
+    {name:'bob', department:'tech', id:3, employees:[alice, steve]};
+
+for(const e of  [alice, steve, bob]) {
+    printStaffDetails(e);
+}
