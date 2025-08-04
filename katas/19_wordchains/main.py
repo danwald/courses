@@ -3,6 +3,8 @@ import codecs
 from collections import defaultdict
 from pathlib import Path
 from ldistance import distance
+from itertools import chain
+from collections import deque
 
 
 class Words(defaultdict[int, set[str]]):
@@ -38,7 +40,7 @@ class Words(defaultdict[int, set[str]]):
             print(f"'{start}':{paths} candidate word paths")
 
         result: list[list[str]] = []
-        stack: list[tuple[str, list[str]]] = [(start, [])]
+        stack: deque[tuple[str, list[str]]] = deque([(start, [])])
 
         while stack:
             current_word, path = stack.pop()
@@ -49,15 +51,17 @@ class Words(defaultdict[int, set[str]]):
                     print(f"Found: {len(result)}", end="")
                 continue
 
-            new_path = path + [current_word]
+            new_path = [p for p in chain(path, [current_word])]
+            new_path_set = set(new_path)
             candidates = [
-                cw
-                for cw in self[len(current_word)]
-                if cw not in new_path and distance(current_word, cw) == 1
+                can_wrd
+                for can_wrd in self[len(current_word)]
+                if can_wrd not in new_path_set and distance(current_word, can_wrd) == 1
             ]
 
             for cw in candidates:
-                stack.append((cw, new_path))
+                stack.appendleft((cw, new_path[:]))
+        print(f"\rpaths: {len(stack)}", end="")
 
         return result or None
 
