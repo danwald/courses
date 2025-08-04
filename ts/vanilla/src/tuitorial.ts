@@ -236,4 +236,13 @@ function getEmployee(): Person|DogOwner|Manager2 {
 }
 
 const employee: (Person|DogOwner|Manager2) = getEmployee();
-console.log(employee.toString())
+console.log(employee.toString());
+
+function isManager (obj: Person|DogOwner|Manager2): obj is Manager2 {
+    return 'delegateTasks' in obj;
+}
+
+if(isManager(employee)) {
+    console.log(employee.managePeople(4));
+    console.log(employee.delegateTasks(3));
+}
