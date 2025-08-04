@@ -246,3 +246,28 @@ if(isManager(employee)) {
     console.log(employee.managePeople(4));
     console.log(employee.delegateTasks(3));
 }
+
+enum UserRole {
+    Admin,
+    Manager,
+    employee,
+}
+
+type User  = {
+    id: number;
+    name: string;
+    role: UserRole;
+    contact: [string, string];
+}
+
+function createUser(obj: User): User {
+    const o: User = {
+        id: obj.id,
+        name: obj.name,
+        role: obj.role,
+        contact: obj.contact,
+    };
+    return o;
+}
+console.log(
+    createUser({id:1, name:'danny', role: UserRole.Admin, contact:['dan@gmail.com', '+971553453234']}));
