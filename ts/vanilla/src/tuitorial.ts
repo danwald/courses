@@ -177,3 +177,63 @@ interface Computer {
 const c1: Computer = {id:1, brand:'apple', ram:1, upgradeRam(n:number):number{return n+this.ram}};
 console.log(c1);
 console.log(c1.upgradeRam(3));
+
+
+interface Stringify {
+    toString():string;
+}
+interface Person extends Stringify {
+    name: string;
+}
+
+interface DogOwner extends Person {
+    dogName: string;
+}
+
+interface Manager2 extends Person {
+    managePeople(num: number):string;
+    delegateTasks(num: number):string;
+}
+
+function getEmployee(): Person|DogOwner|Manager2 {
+    const flip = Math.random()
+    if(flip <= 0.33){
+       const o: DogOwner = {
+            name:"foo",
+            dogName:"bar",
+            toString():string {
+                return `Name:${this.name}, dog:${this.dogName}`;
+            }
+        }
+        return o;
+    }
+    else if(flip <=0.66) {
+       const  o: Person = {
+            name:"foo",
+            toString():string {
+                return `Name:${this.name}`;
+            }
+        }
+        return o;
+    }
+    else{
+       const o: Manager2 = {
+            name:"foo",
+            managePeople(num: number):string {
+                return `Manage ${num} people`;
+            },
+            delegateTasks(num: number):string {
+                return `${num} tasks in progress`;
+            },
+            toString():string {
+                return `Name:${this.name} ${this.managePeople(2)}. ${this.delegateTasks(5)}.`;
+            }
+        }
+        return o;
+    }
+
+
+}
+
+const employee: (Person|DogOwner|Manager2) = getEmployee();
+console.log(employee.toString())
