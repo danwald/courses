@@ -9,7 +9,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
 from schemas import AnswerQuestion
 
-lm = ChatOpenAI(model="o4-mini")
+llm = ChatOpenAI(model="o4-mini")
 parser = JsonOutputToolsParser(return_id=True)
 parser_pydantic = PydanticToolsParser(tools=[AnswerQuestion])
 actor_prompt_template = ChatPromptTemplate.from_messages(
@@ -26,3 +26,26 @@ Current time: {time}
         MessagesPlaceholder(variable_name="messages"),
     ]
 ).partial(time=lambda: datetime.datetime.now().isoformat())
+
+first_responder_prompt_template = actor_prompt_template.partial(
+    first_instruction="Provide a detailed ~250 word answer."
+)
+
+first_responder = first_responder_prompt_template | llm.bind_tools(
+    tools=[AnswerQuestion], tool_choice="AnswerQuestion"
+)
+
+
+if __name__ == "__main__":
+    human_message = HumanMessage(
+        content="Write about AI-Powered SOC / autonomous soc  problem domain,"
+        " list startups that do that and raised capital."
+    )
+    chain = (
+        first_responder_prompt_template
+        | llm.bind_tools(tools=[AnswerQuestion], tool_choice="AnswerQuestion")
+        | parser_pydantic
+    )
+
+    res = chain.invoke(input={"messages": [human_message]})
+    print(res)
