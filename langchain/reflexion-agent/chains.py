@@ -7,7 +7,11 @@ from langchain_core.output_parsers.openai_tools import (
 )
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
+from schemas import AnswerQuestion
 
+lm = ChatOpenAI(model="o4-mini")
+parser = JsonOutputToolsParser(return_id=True)
+parser_pydantic = PydanticToolsParser(tools=[AnswerQuestion])
 actor_prompt_template = ChatPromptTemplate.from_messages(
     [
         (
@@ -21,4 +25,4 @@ Current time: {time}
         ),
         MessagesPlaceholder(variable_name="messages"),
     ]
-).partial(lambda: datetime.datetime.now().isoformat())
+).partial(time=lambda: datetime.datetime.now().isoformat())
