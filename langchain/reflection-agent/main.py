@@ -31,11 +31,11 @@ def should_continue(state: List[BaseMessage]):
     return REFLECT
 
 
-builder.add_conditional_edges(GENERATE, should_continue)
+builder.add_conditional_edges(GENERATE, should_continue, {END:END,REFLECT:REFLECT})
 builder.add_edge(REFLECT, GENERATE)
 
 graph = builder.compile()
-#print(graph.get_graph().draw_mermaid())
+print(graph.get_graph().draw_mermaid())
 graph.get_graph().print_ascii()
 
 if __name__ == "__main__":
