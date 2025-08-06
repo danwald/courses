@@ -25,6 +25,14 @@ class Words(defaultdict[int, set[str]]):
             self.process()
         return f"dictionary size length {sum(len(words) for words in self.values())}"
 
+    def _get_candidates(self, word:str, diff_length: int = 1, exclude_set: set[str]|None = None) -> list[str]:
+        return [
+            can_wrd
+            for can_wrd in self[len(word)]
+            if can_wrd not in (exclude_set or set())
+            and distance(word, can_wrd) == diff_length
+        ]
+
     def chain(
         self, start: str, end: str, debug: bool = False, recursive: bool = False
     ) -> list[list[str]] | None:
@@ -41,6 +49,7 @@ class Words(defaultdict[int, set[str]]):
 
         result: list[list[str]] = []
         stack: deque[tuple[str, list[str]]] = deque([(start, [])])
+        path: list[str] = []
 
         def iterative_impl() -> None:
             while stack:
@@ -52,20 +61,19 @@ class Words(defaultdict[int, set[str]]):
 
                 new_path = [p for p in chain(path, [current_word])]
                 new_path_set = set(new_path)
-                candidates = [
-                    can_wrd
-                    for can_wrd in self[len(current_word)]
-                    if can_wrd not in new_path_set
-                    and distance(current_word, can_wrd) == 1
-                ]
-
+                candidates = self._get_candidates(current_word, exclude_set=new_path_set)
                 for cw in candidates:
                     stack.appendleft((cw, new_path[:]))
                 if debug:
                     print(f"\rpaths: {len(stack)} Found: {len(result)}", end="")
 
         def recusrive_impl(word: str) -> None:
-            pass
+            if word == end:
+                result.append([word for word in chain(path, [end])])
+                return
+            path.append(word)
+            candidates = self._get_candidates(word, exclude_set=set(path))
+
 
         recusrive_impl(start) if recursive else iterative_impl()
 
