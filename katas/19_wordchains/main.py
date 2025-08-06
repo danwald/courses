@@ -25,7 +25,9 @@ class Words(defaultdict[int, set[str]]):
             self.process()
         return f"dictionary size length {sum(len(words) for words in self.values())}"
 
-    def _get_candidates(self, word:str, diff_length: int = 1, exclude_set: set[str]|None = None) -> list[str]:
+    def _get_candidates(
+        self, word: str, diff_length: int = 1, exclude_set: set[str] | None = None
+    ) -> list[str]:
         return [
             can_wrd
             for can_wrd in self[len(word)]
@@ -61,7 +63,9 @@ class Words(defaultdict[int, set[str]]):
 
                 new_path = [p for p in chain(path, [current_word])]
                 new_path_set = set(new_path)
-                candidates = self._get_candidates(current_word, exclude_set=new_path_set)
+                candidates = self._get_candidates(
+                    current_word, exclude_set=new_path_set
+                )
                 for cw in candidates:
                     stack.appendleft((cw, new_path[:]))
                 if debug:
@@ -73,7 +77,10 @@ class Words(defaultdict[int, set[str]]):
                 return
             path.append(word)
             candidates = self._get_candidates(word, exclude_set=set(path))
-
+            for next_word in candidates:
+                recusrive_impl(next_word)
+                if path:
+                    path.pop()
 
         recusrive_impl(start) if recursive else iterative_impl()
 
@@ -103,6 +110,8 @@ def tests() -> None:
         ] or [["dog", "cog", "cot", "cat"], ["dog", "cog", "cot", "bot", "bat", "cat"]]
 
         assert td.chain("dog", "pat") is None
+
+        assert td.chain("cog", "dog", recursive=True) == [["cog", "dog"]]
 
 
 if __name__ == "__main__":
