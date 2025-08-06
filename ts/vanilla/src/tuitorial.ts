@@ -300,3 +300,10 @@ function returnself<T>(arg: T): T{
 }
 console.log(returnself<string>('foo'));
 console.log(returnself<number>(123));
+
+function createArray<T>(length: number, val:T):Array<T>{
+    return Array<T>(length).fill(val);
+}
+
+console.log(createArray(2, 'foo'));
+console.log(createArray(20, 10));
