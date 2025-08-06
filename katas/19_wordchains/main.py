@@ -47,8 +47,6 @@ class Words(defaultdict[int, set[str]]):
 
             if current_word == end:
                 result.append(path + [end])
-                if debug:
-                    print(f"Found: {len(result)}", end="")
                 continue
 
             new_path = [p for p in chain(path, [current_word])]
@@ -61,7 +59,8 @@ class Words(defaultdict[int, set[str]]):
 
             for cw in candidates:
                 stack.appendleft((cw, new_path[:]))
-        print(f"\rpaths: {len(stack)}", end="")
+            if debug:
+                print(f"\rpaths: {len(stack)} Found: {len(result)}", end="")
 
         return result or None
 
