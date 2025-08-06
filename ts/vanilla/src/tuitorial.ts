@@ -271,3 +271,25 @@ function createUser(obj: User): User {
 }
 console.log(
     createUser({id:1, name:'danny', role: UserRole.Admin, contact:['dan@gmail.com', '+971553453234']}));
+
+
+type ValueType = string | boolean | number;
+
+const rval = Math.random();
+let value: ValueType = rval < 0.33 ? "foobar" : rval < 0.66 ? false : 42;
+
+function checkVal(val: ValueType): void {
+    let desc: string = ''
+    if (typeof val === 'number') {
+        desc = 'number';
+    }
+    else if (typeof val === 'boolean') {
+        desc = 'boolean';
+    }
+    else if (typeof val === 'string') {
+        desc = 'string';
+    }
+
+    console.log(`Your ${desc} is "${val}"`);
+}
+checkVal(value);
