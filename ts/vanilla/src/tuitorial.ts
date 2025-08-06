@@ -310,13 +310,17 @@ console.log(createArray(20, 10));
 
 const url:string = "https://www.course-api.com/react-tours-project";
 
-type Tour = {
-    id:string;
-    name:string;
-    image:string;
-    price:string;
-    info:string;
-}
+import { z } from 'zod';
+
+const TourSchema = z.object({
+    id:z.string(),
+    name:z.string(),
+    image:z.string(),
+    price:z.string(),
+    info:z.string(),
+});
+
+type Tour = z.infer<typeof TourSchema>;
 
 async function fetchData(url: string): Promise<Tour[]> {
     try {
@@ -325,7 +329,12 @@ async function fetchData(url: string): Promise<Tour[]> {
             throw Error(`HTTP error ${resp.status}`);
         }
         const data = await resp.json()
-        return data;
+        const result = TourSchema.array().safeParse(data);
+        if(!result.success){
+            throw Error(`Invalid data ${result.error}`);
+        }
+
+        return result.data;
     } catch (error) {
         const msg = error instanceof Error ? error.message : "error happened";
         console.log(msg);
