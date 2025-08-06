@@ -26,7 +26,7 @@ class Words(defaultdict[int, set[str]]):
         return f"dictionary size length {sum(len(words) for words in self.values())}"
 
     def chain(
-        self, start: str, end: str, debug: bool = False
+        self, start: str, end: str, debug: bool = False, recursive: bool = False
     ) -> list[list[str]] | None:
         if not (start or end) or len(start) != len(end):
             raise ValueError(
@@ -42,25 +42,32 @@ class Words(defaultdict[int, set[str]]):
         result: list[list[str]] = []
         stack: deque[tuple[str, list[str]]] = deque([(start, [])])
 
-        while stack:
-            current_word, path = stack.pop()
+        def iterative_impl() -> None:
+            while stack:
+                current_word, path = stack.pop()
 
-            if current_word == end:
-                result.append(path + [end])
-                continue
+                if current_word == end:
+                    result.append(path + [end])
+                    continue
 
-            new_path = [p for p in chain(path, [current_word])]
-            new_path_set = set(new_path)
-            candidates = [
-                can_wrd
-                for can_wrd in self[len(current_word)]
-                if can_wrd not in new_path_set and distance(current_word, can_wrd) == 1
-            ]
+                new_path = [p for p in chain(path, [current_word])]
+                new_path_set = set(new_path)
+                candidates = [
+                    can_wrd
+                    for can_wrd in self[len(current_word)]
+                    if can_wrd not in new_path_set
+                    and distance(current_word, can_wrd) == 1
+                ]
 
-            for cw in candidates:
-                stack.appendleft((cw, new_path[:]))
-            if debug:
-                print(f"\rpaths: {len(stack)} Found: {len(result)}", end="")
+                for cw in candidates:
+                    stack.appendleft((cw, new_path[:]))
+                if debug:
+                    print(f"\rpaths: {len(stack)} Found: {len(result)}", end="")
+
+        def recusrive_impl(word: str) -> None:
+            pass
+
+        recusrive_impl(start) if recursive else iterative_impl()
 
         return result or None
 
