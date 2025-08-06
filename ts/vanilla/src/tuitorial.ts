@@ -308,9 +308,17 @@ function createArray<T = string>(length: number, val:T):Array<T>{
 console.log(createArray(2, 'foo'));
 console.log(createArray(20, 10));
 
-const url = "https://www.course-api.com/react-tours-project";
+const url:string = "https://www.course-api.com/react-tours-project";
 
-async function fetchData(url: string) {
+type Tour = {
+    id:string;
+    name:string;
+    image:string;
+    price:string;
+    info:string;
+}
+
+async function fetchData(url: string): Promise<Tour[]> {
     try {
         const resp = await fetch(url);
         if(!resp.ok) {
@@ -325,4 +333,7 @@ async function fetchData(url: string) {
     }
 }
 
-console.log(await fetchData(url));
+const tours = await fetchData(url);
+tours.map((tour) => {
+    console.log(tour.name);
+});
