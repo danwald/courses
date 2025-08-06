@@ -301,7 +301,7 @@ function returnself<T>(arg: T): T{
 console.log(returnself<string>('foo'));
 console.log(returnself<number>(123));
 
-function createArray<T>(length: number, val:T):Array<T>{
+function createArray<T = string>(length: number, val:T):Array<T>{
     return Array<T>(length).fill(val);
 }
 
