@@ -251,7 +251,7 @@ enum UserRole {
     Admin,
     Manager,
     employee,
-}
+};
 
 type User  = {
     id: number;
@@ -293,3 +293,10 @@ function checkVal(val: ValueType): void {
     console.log(`Your ${desc} is "${val}"`);
 }
 checkVal(value);
+
+
+function returnself<T>(arg: T): T{
+    return arg;
+}
+console.log(returnself<string>('foo'));
+console.log(returnself<number>(123));
