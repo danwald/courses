@@ -36,8 +36,8 @@ if __name__ == "__main__":
     else:
         print(f"Reloading docs from {PERSIST_DIRECTORY}")
 
-    retriever = Chroma(
-        collection_name=COLLECTION_NAME,
-        persist_directory=PERSIST_DIRECTORY,
-        embedding_function=OpenAIEmbeddings(),
-    ).as_retriever()
+retriever = Chroma(
+    collection_name=COLLECTION_NAME,
+    persist_directory=PERSIST_DIRECTORY,
+    embedding_function=OpenAIEmbeddings(),
+).as_retriever()
