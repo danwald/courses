@@ -79,9 +79,8 @@ class Words(defaultdict[int, set[str]]):
             candidates = self._get_candidates(word, exclude_set=set(path))
             for next_word in candidates:
                 recusrive_impl(next_word)
-                if path:
-                    if path.pop() == start:
-                        break
+                if path and path.pop() == start:
+                    break
 
         recusrive_impl(start) if recursive else iterative_impl()
 
