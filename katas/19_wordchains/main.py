@@ -119,4 +119,4 @@ def tests() -> None:
 
 if __name__ == "__main__":
     tests()
-    # main()
+    main()
