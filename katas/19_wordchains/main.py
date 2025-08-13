@@ -28,11 +28,11 @@ class Words(defaultdict[int, set[str]]):
     def _get_candidates(
         self, word: str, diff_length: int = 1, exclude_set: set[str] | None = None
     ) -> list[str]:
+        exclude_set = exclude_set or set()
         return [
             can_wrd
             for can_wrd in self[len(word)]
-            if can_wrd not in (exclude_set or set())
-            and distance(word, can_wrd) == diff_length
+            if can_wrd not in exclude_set and distance(word, can_wrd) == diff_length
         ]
 
     def chain(
@@ -73,7 +73,7 @@ class Words(defaultdict[int, set[str]]):
 
         def recusrive_impl(word: str) -> None:
             if word == end:
-                result.append([word for word in chain(path, [end])])
+                result.append([wd for wd in chain(path, [end])])
                 return
             path.append(word)
             candidates = self._get_candidates(word, exclude_set=set(path))
