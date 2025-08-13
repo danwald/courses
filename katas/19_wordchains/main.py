@@ -80,7 +80,8 @@ class Words(defaultdict[int, set[str]]):
             for next_word in candidates:
                 recusrive_impl(next_word)
                 if path:
-                    path.pop()
+                    if path.pop() == start:
+                        break
 
         recusrive_impl(start) if recursive else iterative_impl()
 
@@ -111,9 +112,11 @@ def tests() -> None:
 
         assert td.chain("dog", "pat") is None
 
-        assert td.chain("cog", "dog", recursive=True) == [["cog", "dog"]]
+        cog_dog = td.chain("cog", "dog", recursive=True)
+        # print(cog_dog)
+        assert cog_dog == [["cog", "dog"]]
 
 
 if __name__ == "__main__":
     tests()
-    main()
+    # main()
