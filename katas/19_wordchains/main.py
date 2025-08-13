@@ -3,7 +3,6 @@ import codecs
 from collections import defaultdict
 from pathlib import Path
 from ldistance import distance
-from itertools import chain
 from collections import deque
 
 
@@ -61,19 +60,19 @@ class Words(defaultdict[int, set[str]]):
                     result.append(path + [end])
                     continue
 
-                new_path = [p for p in chain(path, [current_word])]
+                new_path = path[:] + [current_word]
                 new_path_set = set(new_path)
                 candidates = self._get_candidates(
                     current_word, exclude_set=new_path_set
                 )
                 for cw in candidates:
-                    stack.appendleft((cw, new_path[:]))
+                    stack.appendleft((cw, new_path))
                 if debug:
                     print(f"\rpaths: {len(stack)} Found: {len(result)}", end="")
 
         def recusrive_impl(word: str) -> None:
             if word == end:
-                result.append([wd for wd in chain(path, [end])])
+                result.append(path[:] + [end])
                 return
             path.append(word)
             candidates = self._get_candidates(word, exclude_set=set(path))
