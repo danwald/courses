@@ -7,5 +7,5 @@ from graph.state import GraphState
 
 def retrieve(state: GraphState) -> dict[str, Any]:
     question = state["question"]
-    docs = retriever.invoke({"question": question})
+    docs = retriever.invoke(question)
     return {"documents": docs, "question": question}

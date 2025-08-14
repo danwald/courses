@@ -1,10 +1,8 @@
 import os
 
-def main():
-    print('hello crag')
-    os.environ["LANGSMITH_PROJECT"] = "crag-agent"
-
-
+from graph.graph import app
 
 if __name__ == "__main__":
-    main()
+    os.environ["LANGSMITH_PROJECT"] = "crag-agent"
+    print("Hello Advanced RAG")
+    print(app.invoke(input={"question": "what is agent memory?"}))
