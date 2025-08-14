@@ -1,14 +1,15 @@
 from langchain_core.prompts import ChatPromptTemplate
-from pydantic import BaseModel, Field
 from langchain_openai import ChatOpenAI
-
+from pydantic import BaseModel, Field
 
 llm = ChatOpenAI(temperature=0)
+
 
 class GradeDocuments(BaseModel):
     binary_score: str = Field(
         description='Documents are relevation to the question, "yes" or "no"'
     )
+
 
 structured_llm_grader = llm.with_structured_output(GradeDocuments)
 
@@ -18,8 +19,8 @@ system = """You are a grader assessing relevance of a retrieved document to a us
 
 grade_prompt = ChatPromptTemplate.from_messages(
     [
-        ('system', system),
-        ('human', 'Retrieved document: \n\n {document} \n\n User question: {question}'),
+        ("system", system),
+        ("human", "Retrieved document: \n\n {document} \n\n User question: {question}"),
     ]
 )
 

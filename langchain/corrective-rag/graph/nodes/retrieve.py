@@ -1,7 +1,8 @@
 from typing import Any
 
-from graph.state import GraphState
 from ingestion import retriever
+
+from graph.state import GraphState
 
 
 def retrieve(state: GraphState) -> dict[str, Any]:
