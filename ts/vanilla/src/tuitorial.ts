@@ -349,24 +349,24 @@ tours.map((tour) => {
 
 
 class Book {
-    title: string;
-    author: string;
-    readonly private checkedOut: boolean = false;
+    public title: string;
+    public author: string;
+    private checkedOut: boolean;
 
-    constructor(title:string, author:string, checkedOut: boolean = false) {
+    constructor(title: string, author: string, checkedOut: boolean = false) {
         this.title = title;
         this.author = author;
         this.checkedOut = checkedOut;
     }
-
-    checkOut() {
-        this.checkedOut = !this.checkedOut;
+    get info() {
+        return `${this.title} by ${this.author}`;
     }
-
-    isCheckedOut() : boolean{
+    get checkOut(){
         return this.checkedOut;
     }
+
+
 }
 
 const book = new Book("of mice and men", "john steinback", true);
-console.log(`${book} is checked out? ${book.isCheckedOut()}`);
+console.log(`${book.info} is checked out? ${book.checkOut}`);
