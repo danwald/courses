@@ -346,3 +346,27 @@ const tours = await fetchData(url);
 tours.map((tour) => {
     console.log(tour.name);
 });
+
+
+class Book {
+    title: string;
+    author: string;
+    readonly private checkedOut: boolean = false;
+
+    constructor(title:string, author:string, checkedOut: boolean = false) {
+        this.title = title;
+        this.author = author;
+        this.checkedOut = checkedOut;
+    }
+
+    checkOut() {
+        this.checkedOut = !this.checkedOut;
+    }
+
+    isCheckedOut() : boolean{
+        return this.checkedOut;
+    }
+}
+
+const book = new Book("of mice and men", "john steinback", true);
+console.log(`${book} is checked out? ${book.isCheckedOut()}`);
