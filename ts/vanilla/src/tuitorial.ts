@@ -370,3 +370,26 @@ class Book {
 
 const book = new Book("of mice and men", "john steinback", true);
 console.log(`${book.info} is checked out? ${book.checkOut}`);
+
+interface IPerson {
+    name: string;
+    age: number;
+    greet(): string;
+}
+
+class Person implements IPerson {
+    public name: string;
+    public age: number;
+
+    constructor(name:string, age: number){
+        this.name = name;
+        this.age = age;
+    }
+    greet() : string {
+        const comment: string =  this.age > 30 ? "You ain't no spring chicken" : "You're the future";
+        return `Hello ${this.name}. ${comment}.`;
+    }
+}
+
+const p = new Person("danny", 45);
+console.log(p.greet());
