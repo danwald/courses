@@ -22,6 +22,7 @@ function submitFunc(event: SubmitEvent) {
     isComplete: true,
   }
   addTask(task);
+  renderTask(task);
   inputForm.value = ''
 
 }
@@ -30,4 +31,9 @@ function addTask(task: Task): void {
   console.log(tasks);
 };
 
+function renderTask(task: Task) {
+  const el = document.createElement("li");
+  el.textContent = task.description;
+  taskListElement.appendChild(el)
+}
 taskForm.addEventListener('submit', submitFunc);
