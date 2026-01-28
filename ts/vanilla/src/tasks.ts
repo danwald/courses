@@ -36,6 +36,16 @@ function addTask(task: Task): void {
 function renderTask(task: Task) {
   const el = document.createElement("li");
   el.textContent = task.description;
+
+  const taskCheckbox = document.createElement("input");
+  taskCheckbox.type = "checkbox";
+  taskCheckbox.checked = task.isComplete;
+
+  taskCheckbox.addEventListener("change", () => {
+    task.isComplete = !task.isComplete;
+    updateStorage();
+  });
+  el.appendChild(taskCheckbox);
   taskListElement.appendChild(el)
 }
 taskForm.addEventListener('submit', submitFunc);
