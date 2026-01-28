@@ -9,7 +9,8 @@ type Task = {
   isComplete: boolean;
 };
 
-const tasks: Task[] = [];
+const tasks: Task[] = loadTasks();
+tasks.forEach(renderTask)
 function submitFunc(event: SubmitEvent) {
   event.preventDefault();
   const taskDescription = inputForm?.value;
@@ -23,6 +24,7 @@ function submitFunc(event: SubmitEvent) {
   }
   addTask(task);
   renderTask(task);
+  updateStorage();
   inputForm.value = ''
 
 }
@@ -37,3 +39,13 @@ function renderTask(task: Task) {
   taskListElement.appendChild(el)
 }
 taskForm.addEventListener('submit', submitFunc);
+
+function updateStorage(): void {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+
+}
+
+function loadTasks(): Task[] {
+  const storedTasks = localStorage.getItem("tasks")
+  return storedTasks ? JSON.parse(storedTasks) : []
+}
