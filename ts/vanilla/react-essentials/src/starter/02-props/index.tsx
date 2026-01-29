@@ -1,4 +1,10 @@
-function Component({ name, id }: { name: string; id: number }) {
+type ComponentProps = {
+  name: string;
+  id: number;
+
+}
+
+function Component({ name, id }: ComponentProps) {
   return (
     <div>
       <h2>Name: {name}</h2>
