@@ -5,6 +5,7 @@ function App() {
   return (
     <main>
       <Component name='Danny' id={123} />
+      <Component name='Thanda' id={345} />
     </main>
   );
 }
