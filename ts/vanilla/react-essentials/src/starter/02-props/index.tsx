@@ -1,8 +1,8 @@
-function Component() {
+function Component({ name, id }: { name: string; id: number }) {
   return (
     <div>
-      <h2>React & Typescript</h2>
-      <h2>Props</h2>
+      <h2>Name: {name}</h2>
+      <h2>Id {id}</h2>
     </div>
   );
 }
