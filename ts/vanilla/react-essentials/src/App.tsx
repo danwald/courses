@@ -4,7 +4,7 @@ import Component from './starter/02-props/'
 function App() {
   return (
     <main>
-      <Component />
+      <Component name='Danny' id={123} />
     </main>
   );
 }
