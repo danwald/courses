@@ -1,13 +1,10 @@
-import React, { PropsWithChildren } from 'react';
-type ComponentProps = {
+import { PropsWithChildren } from 'react';
+type ComponentProps = PropsWithChildren<{
   name: string;
   id: number;
-  children?: React.ReactNode;
-}
+}>
 
-type ComponentPropsWithChildren = PropsWithChildren<ComponentProps>;
-
-function Component({ name, id, children }: ComponentPropsWithChildren) {
+function Component({ name, id, children }: ComponentProps) {
   return (
     <div>
       <h2>Name: {name}</h2>
