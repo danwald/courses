@@ -23,6 +23,11 @@
       "react-app/jest"
     ]
   },
+  "resolutions": {
+    "elliptic": "6.5.7",
+    "express": "4.19.2",
+    "tar": "6.2.1"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
